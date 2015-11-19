@@ -1,0 +1,270 @@
+{% extends "main.html" %}
+
+{% block title %}首页{% end %}
+
+{% block body %}
+<div id="bannerBox" class="owl-carousel">
+    <div class="banner-cell">
+        <img src="{{ static_url("home/images/banner1.jpg") }}" class="img-responsive"/>
+        <div class="text">
+            <h2>自由的开发平台</h2>
+            <p>自定义web站点,自定义app应用,自由开发掌控的设备应用平台,"我"的地盘,听"我"的！</p>
+            <a href="###">
+                加入我们
+            </a>
+        </div>
+    </div>
+    <div class="banner-cell">
+        <img src="{{ static_url("home/images/banner2.jpg") }}" class="img-responsive"/>
+        <div class="text">
+            <h2>量身定制的功能应用</h2>
+            <p>只要你敢于迈出这一步，只要你拥有足够的资源,我们可以为您量身开发您的站点与应用,指点江山,决胜千里之外！</p>
+            <a href="###">
+                加入我们
+            </a>
+        </div>
+    </div>
+</div>
+<section id="work" class="wrap">
+    <div class="content">
+        <div class="title">
+            <span>我们在做什么</span>
+        </div>
+        <div class="text">我们致力于打造一个自由自在的创意平台，提供给开发者一站式的服务，帮助您实现梦想！</div>
+        <div class="row">
+            <div class="col-xs-6 col-sm-4">
+                <div class="service-box">
+                    <img src="{{ static_url("home/images/pcb.png") }}" class="img-responsive"/>
+                    <h4>硬件支持</h4>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+                <div class="service-box">
+                    <img src="{{ static_url("home/images/ui.png") }}" class="img-responsive"/>
+                    <h4>UI支持</h4>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+                <div class="service-box">
+                    <img src="{{ static_url("home/images/server.png") }}" class="img-responsive"/>
+                    <h4>服务器支持</h4>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+                <div class="service-box">
+                    <img src="{{ static_url("home/images/app.png") }}" class="img-responsive"/>
+                    <h4>APP支持</h4>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+                <div class="service-box">
+                    <img src="{{ static_url("home/images/embe.png") }}" class="img-responsive"/>
+                    <h4>嵌入式支持</h4>
+                </div>
+            </div>
+            <div class="col-xs-6 col-sm-4">
+                <div class="service-box">
+                    <img src="{{ static_url("home/images/web.png") }}" class="img-responsive"/>
+                    <h4>网关类支持</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="help" class="wrap">
+    <div class="content">
+        <div class="title">
+            <span>我们能帮您什么</span>
+        </div>
+        <div class="text"> 有想法有创意，但是却独木难撑，有一技之长却无团队配合完成梦想，那么我们能帮到您！ </div>
+        <div class="help-box">
+            <ul class="help-list clearfix">
+                <li class="active" data-service="github">
+                    <a>
+                        <img src="{{ static_url("home/images/man1.png") }}" class="img-responsive"/>
+                    </a>
+                </li>
+                <li data-service="basecamp">
+                    <a>
+                        <img src="{{ static_url("home/images/man2.png") }}" class="img-responsive"/>
+                    </a>
+                </li>
+                <li data-service="dropbox">
+                    <a>
+                        <img src="{{ static_url("home/images/man3.png") }}" class="img-responsive"/>
+                    </a>
+                </li>
+                <li data-service="harvest">
+                    <a>
+                        <img src="{{ static_url("home/images/man4.png") }}" class="img-responsive"/>
+                    </a>
+                </li>
+                <li data-service="drive">
+                    <a>
+                        <img src="{{ static_url("home/images/man5.png") }}" class="img-responsive"/>
+                    </a>
+                </li>
+                <li class="last" data-service="calendar">
+                    <a>
+                        <img src="{{ static_url("home/images/man6.png") }}" class="img-responsive"/>
+                    </a>
+                </li>
+            </ul>
+            <div class="nib"></div>
+            <div class="panes">
+                <div class="pane active" data-service="github">
+                    <div class="txt">
+                        <span><img src="{{ static_url("home/images/man1.png") }}" class="img-responsive"/>我是PCB硬件工程师</span>
+                        <p>我们这里有丰富的设计</p>
+                    </div>
+                    <div class="screenshot">设计</div>
+                </div>
+                <div class="pane" data-service="basecamp">
+                    <div class="txt">
+                        <span><img src="{{ static_url("home/images/man2.png") }}" class="img-responsive"/>我是UI设计师</span>
+                        <p>我们这里有丰富的设计</p>
+                    </div>
+                    <div class="screenshot">设计</div>
+                </div>
+                <div class="pane" data-service="dropbox">
+                    <div class="txt">
+                        <span><img src="{{ static_url("home/images/man3.png") }}" class="img-responsive"/>我是服务器工程师</span>
+                        <p>我们这里有丰富的设计</p>
+                    </div>
+                    <div class="screenshot">设计</div>
+                </div>
+                <div class="pane" data-service="harvest">
+                    <div class="txt">
+                        <span><img src="{{ static_url("home/images/man4.png") }}" class="img-responsive"/>我是APP工程师</span>
+                        <p>我们这里有丰富的设计</p>
+                    </div>
+                    <div class="screenshot">设计</div>
+                </div>
+                <div class="pane" data-service="drive">
+                    <div class="txt">
+                        <span><img src="{{ static_url("home/images/man5.png") }}" class="img-responsive"/>我是嵌入式工程师</span>
+                        <p>我们这里有丰富的设计</p>
+                    </div>
+                    <div class="screenshot">设计</div>
+                </div>
+                <div class="pane" data-service="calendar">
+                    <div class="txt">
+                        <span><img src="{{ static_url("home/images/man6.png") }}" class="img-responsive"/>我是网络工程师</span>
+                        <p>我们这里有丰富的设计</p>
+                    </div>
+                    <div class="screenshot">设计</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="wrap">
+    <div class="content">
+        <div class="title">
+            <span>我们的合作伙伴</span>
+        </div>
+        <div class="text"> 我们有顶尖的厂商助您一臂之力 </div>
+        <div id="links" class="owl-carousel">
+            <div class="link">
+                <img src="{{ static_url("home/images/link1.png") }}" class="img-responsive"/>
+            </div>
+            <div class="link">
+                <img src="{{ static_url("home/images/link2.png") }}" class="img-responsive"/>
+            </div>
+            <div class="link">
+                <img src="{{ static_url("home/images/link3.png") }}" class="img-responsive"/>
+            </div>
+            <div class="link">
+                <img src="{{ static_url("home/images/link4.png") }}" class="img-responsive"/>
+            </div>
+            <div class="link">
+                <img src="{{ static_url("home/images/link4.png") }}" class="img-responsive"/>
+            </div>
+        </div>
+    </div>
+</section>
+{% end %}
+
+{% block footer %}
+<script src="{{ static_url("home/js/owl.carousel.js") }}"></script>
+<script>
+
+$('#bannerBox').owlCarousel({
+    items:1,
+    loop:true,
+    margin:0,
+    autoplay:true,
+    navigation:false,
+    autoplayTimeout:3000,
+    autoplayHoverPause:true,     
+});
+
+//滚动图js 
+$('#links').owlCarousel({
+    items:2,
+    loop:true,
+    margin:0,
+    autoplay:true,
+    navigation:false,
+    autoplayTimeout:3000,
+    autoplayHoverPause:true,
+    responsive:{    
+            480:{
+                items:2
+            },
+
+            678:{
+                items:3
+            },
+
+            960:{
+                items:4
+            }
+        }
+});
+
+//选项卡js
+function tab() {
+    var i = $('.help-box ');
+    var e = $('.help-box ul.help-list li');
+    var n = $('.help-box .panes');
+    var r = $('.help-box .panes .pane');
+    var t = $('.nib');
+    var a = $('.help-box ul.help-list li.active').position() ;
+    var s = e.closest("li").outerWidth();
+    
+    $('.help-box .nib').css('left', a.left + s/2 - 20);
+
+    $('.help-box .panes').css('height',$('.help-box .panes .pane.active').height())
+    
+    $('.help-box ul.help-list li a').click(function(){
+        
+        $('.help-box ul.help-list li').removeClass('active');
+        
+        $(".help-box .panes .pane").removeClass('active')
+
+        $(this).closest('li').addClass('active')
+
+        r.eq($(this).closest('li').index()).addClass('active');
+        
+        a = $(this).closest('li').position().left;
+        
+        s = $(this).closest('li').outerWidth();
+        
+        t.css("left", a + s/2 - 20);
+        
+        n.height(r.filter(".active").height())
+    
+    })
+    
+    $('.help-box .pane').click(function(){
+        var r;
+        $(this).hasClass('active') ? void 0 : (r = $(this).index(), e.eq(r).find('a').click())
+    })
+ 
+}
+$(document).ready(function() {tab();}); 
+$(window).resize(function(){ tab();})
+
+</script>
+{% end %}

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html" />
+<!-- 指定以最新的IE版本模式来显示网页 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- 针对360浏览器的内核调用,强制调用极速模式 -->
+<meta name="renderer" content="webkit" />
+<!--[if lt IE 10]>
+<meta name="renderer" content="ie-stand" />
+<![endif]-->
+<!--[if !IE]>
+<meta name="renderer" content="ie-stand" />
+<!<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>记录查询</title>
+<style type="text/css">
+	#main{ width:800px; margin:auto;} 
+	#mainTitle{ width: 100%; height:50px; line-height: 50px; font-size: 36px; font-weight: bolder; margin-bottom: 20px;}
+	#listBox{ width:100%; height:100%; position:relative; overflow: hidden;}
+	#mainBox .list.title { width: 100%; height: 40px; line-height: 40px; font-weight: bolder; background: #efefef;  }
+	#mainBox .list { width: 100%; height: 30px; line-height: 30px; border-bottom: 1px solid #D8D7D9; position: relative; }
+	#main.deposit #mainBox .list .date { width: 100px; height: 100%; position: absolute; left: 10px; top: 0; margin: 0; overflow: hidden; }
+	#main.deposit #mainBox .list .address { width: 300px; height: 100%; position: absolute; left: 160px; top: 0; margin: 0; overflow: hidden; }
+	#main.deposit #mainBox .list .model { width: 80px; height: 100%; position: absolute; left: 510px; top: 0; margin: 0; overflow: hidden; }
+	#main.deposit #mainBox .list .money { width: 150px; height: 100%; position: absolute; right: 10px; top: 0; margin: 0; overflow: hidden; text-align: right; }
+
+	#main.recharge #mainBox .list .num { width: 140px; height: 100%; position: absolute; left: 10px; top: 0; margin: 0; overflow: hidden; }
+	#main.recharge #mainBox .list .date { width: 80px; height: 100%; position: absolute; left: 180px; top: 0; margin: 0; overflow: hidden; }
+	#main.recharge #mainBox .list .address { width: 150px; height: 100%; position: absolute; left: 290px; top: 0; margin: 0; overflow: hidden; }
+	#main.recharge #mainBox .list .model { width: 80px; height: 100%; position: absolute; left: 470px; top: 0; margin: 0; overflow: hidden; }
+	#main.recharge #mainBox .list .money { width: 100px; height: 100%; position: absolute; left: 590px; top: 0; margin: 0; overflow: hidden;   }
+	#main.recharge #mainBox .list .stu { width: 70px; height: 100%; position: absolute; right: 10px; top: 0; margin: 0; overflow: hidden; text-align: right; }
+
+	#mainTool{ width:100%;  position:relative; margin-top: 20px; position:relative;}
+	#mainSeach{ width:100%; height:24px;  line-height: 24px; }
+	#seachValue{ width:30px; height:20px; line-height: 24px; text-align: center; margin:0; padding: 0; display:inline-block; }
+	#seachPage{ width:30px; height:20px; line-height: 24px; text-align: center; margin:0; padding: 0; display:inline-block; }
+	#seachBtn{ height:24px; }
+	#printBtn{ position:absolute; right:0; top:0; height:24px;}
+</style>
+</head>
+
+<body>
+{% raw xsrf_form_html() %}
+<form id="myform">
+	<div id="main">
+		<div id="mainTitle"></div>
+		<div id="mainBox">
+	 		<div class="list title">
+	 			<!-- <p class="date">日期</p>
+	            <p class="address">地址</p>
+	            <p class="model">充值方式</p>
+	            <p class="money">充值金额/元</p> -->
+	 		</div>
+	 		<div id="listBox">
+	 			
+	 		</div>
+	 	</div>
+	 	<div id="mainTool">
+	 		<div id="mainSeach">
+	 		<form method="get" name="form2" action="#" onsubmit="return check()">
+	 			当前
+	 			<input id="seachPage" name="page" type="text" value="{{ page }}"/>
+	 			页，每页
+				<input id="seachValue" name="per_page" type="text" value="{{ per_page }}"/>
+				条记录
+				<input id="seachBtn" type="submit" value="显示"/>
+				<input type="hidden" name="cardno" value="{{cardno}}">
+				<input type="hidden" name="cardid" value="{{cardid}}">
+				<input type="hidden" name="cardtype" value="{{cardtype}}">
+				<input type="hidden" name="target" value="{{target}}">
+			</form>
+			</div>
+			<input id="printBtn" type="button" value="打印"/> 
+	 	</div>
+	</div>
+ </form>
+<script src="{{ static_url("point/js/jquery-1.11.1.min.js") }}"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var res =  $.parseJSON('{{dlist}}'.replace(/&quot;/g, '"'));
+	var target = '{{target}}';
+	if (target == 'deposit') {
+		$('#main').addClass('deposit');
+		$('#mainTitle').text('充值记录');
+		$('.list.title').append('<p class="date">日期</p><p class="address">地址</p><p class="model">充值方式</p><p class="money">充值金额/元</p>');
+		for (var i in res) {
+			if (res[i].model == 'point') {
+				res[i].model = '线下充值';
+			} else if (res[i].model == 'alpay') {
+				res[i].model = '支付宝';
+			} else if (res[i].model == 'bank') {
+				res[i].model = '银联';
+			}
+			$('#listBox').append('<div class="list"><p class="date">' + getLocalTime(res[i].acttime) + '</p><p class="address">' + res[i].depict + '</p><p class="model">' + res[i].model + '</p><p class="money">' + res[i].increase + '</p></div>')
+		}
+	}
+	if (target == 'recharge') {
+		$('#main').addClass('recharge');
+		$('#mainTitle').text('消费记录');
+		var stu;
+		$('.list.title').append('<p class="num">流水号</p><p class="date">日期</p><p class="address">地址</p><p class="model">电量/kWh</p><p class="money">消费金额/元</p><p class="stu">结束状态</p>');
+		for (var i in res) {
+			if(res[i].finish == 1){
+				stu = '正常结算';
+			}else if(res[i].finish == 2){
+				stu = '异常结算';
+			}else{
+				stu = '充电中';
+			}
+			$('#listBox').append('<div class="list"><p class="num">'+ res[i].oid +'</p><p class="date">' + getLocalTime(res[i].creatime) + '</p><p class="address">' + res[i].name + '</p><p class="model">' + res[i].electricity + '</p><p class="money">' + res[i].pay + '</p><p class="stu">'+ stu +'</p></div>');
+		}
+	}
+    $('#printBtn').click(function(){window.print()});
+ 
+})
+//时间戳格式化
+function getLocalTime(nS) {
+	var times = new Date(parseInt(nS) * 1000).toLocaleDateString().replace(/年|月|\//g, "-").replace(/日/g, " ");
+	param = times.split('-')
+	for (var x in param) {
+		if (parseInt(param[x]) < 10) {
+			param[x] = '0' + param[x];
+		}
+	}
+	return param.join("-");
+}
+
+function check(){
+	page = $('input[name=page]').val()
+	perpage = $('input[name=per_page]').val()
+	if( isNaN( page ) || isNaN( perpage ) ){
+		alert('分页参数必须是数字');
+		return false;
+	}
+	if( parseInt( page ) <= 0 || parseInt( perpage ) <= 0 ){
+		alert('分页参数必须是正数');
+		return false;
+	}
+	if( parseInt( page ) != page || parseInt( perpage ) != perpage ){
+		alert('分页参数必须是整数');
+		return false;
+	}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block header %}
+    <span class="back"><a href="javascript:history.go(-1)"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充电详情</span>
+{% end %}
+
+{% block body %}
+{% import time %}
+<section id="charge-detail">
+    <div class="title">
+    	<div class="list">
+            <div class="left">
+                充电金额
+            </div>
+            <div class="right">
+                <span id="cmoney">{{ detail['pay'] }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="text">
+        <div class="list">
+            <div class="left">
+                订单号
+            </div>
+            <div class="right">
+                <span id="cnum">{{ detail['oid'] }}</span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                充电度数
+            </div>
+            <div class="right">
+                <span id="cpower">{{ detail['electricity'] }}千瓦时</span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                开始时间
+            </div>
+            <div class="right">
+                <span id="ctime">{{ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(detail['creatime'])) }}</span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                充电耗时
+            </div>
+            <div class="right">
+                <span id="cting">
+                    {% if detail['finish'] == 0 %}
+                        计算中
+                    {% else %}
+                        {% if detail['acttime'] > 60 %}
+                            {{ detail['hour'] }}时{{ detail['minute'] }}分
+                        {% else %}
+                            {{ detail['acttime'] }}分
+                        {% end %}
+                    {% end %}
+                </span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                结算时间
+            </div>
+            <div class="right">
+                <span id="cend">
+                    {% if detail['finish'] == 0 %}
+                        等待结算
+                    {% else %}
+                        {{ time.strftime("%Y-%m-%d %H-%M-%S", time.localtime(detail['endtime'])) }}</span>
+                    {% end %}
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                充电桩号码
+            </div>
+            <div class="right">
+                <span id="ccode">{{ detail['code'] }}</span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                地址
+            </div>
+            <div class="right">
+                <span id="cads">{{ detail['name'] }}</span>
+            </div>
+        </div>
+        <div class="list">
+            <div class="left">
+                订单状态
+            </div>
+            <div class="right">
+                <span id="cstatus">
+                    {% if detail['finish'] == 0 %}
+                        未完成(充电中) <a id="chargelink">[查看]</a>
+                    {% elif detail['finish'] == 1 %}
+                        已结算
+                    {% elif detail['finish'] == 2 %}
+                        异常结束
+                    {% end %}
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+{% end %}
+
+{% block footer %}
+<!--改动-->
+<script>
+the_code = "{{ detail['code'] }}";
+the_time = "{{ detail['creatime'] }}";
+ 
+$(document).ready(function(e) {
+    $('.data-date').find('a').click(function(){
+		$('.data-date').find('a').removeClass('active');
+		$(this).addClass('active');
+	})
+    var href = '/charging?code='+the_code+'&thistime='+the_time ;
+    $('#chargelink').attr('href',href);
+});
+
+</script>
+{% end %}

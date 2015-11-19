@@ -1,0 +1,92 @@
+{% extends "frame.html" %}
+
+{% block title %}未结算列表{% end %}
+
+{% block javascript %}
+<script type="text/javascript">
+function error_finis( oid ){
+    if( confirm('您确定要强制结算么？') ){
+        window.location = '/admin/order_end?oid='+oid
+    }
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">未结算列表</span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">    
+                <table class="mws-table">
+                    <thead>
+                        <tr>
+                            <th>订单号</th>
+                            <th>设备码</th>
+                            <th>卡号</th>
+                            <th>识别码</th>
+                            <th>用户名</th>
+                            <th>用户余额</th>
+                            <th>下单时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if clist %}
+                        {% raw xsrf_form_html() %}
+                        {% import time %}
+                        {% for lt in clist %}
+                        <tr class="gradeA">
+                            <td>{{ lt['oid'] }}</td> 
+                            <td>{{ lt['code'] }}</td>
+                            <td>{{ '%04d%08d'%(lt['cardtype'],lt['cardid']) }}</td>
+                            <td>{{ lt['cardno'] }}</td>
+                            <td>{{ lt['username'] }}</td>
+                            <td>{{ lt['balance'] }}</td>
+                            <td>
+                                {{ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lt['creatime'])) }}
+                            </td>
+                            <td>
+                                <a href="javascript:error_finis( '{{ lt['oid'] }}' )"><img title="强制结算" alt="强制结算" src="{{ static_url("admin/css/icons/16/nuclear.png") }}"></a>
+                            </td>
+                        </tr>
+                        {% end %}
+                        {% else %}
+                        <tr class="gradeX">
+                            <td colspan="8">没有找到您要查找的用户</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+                {% if page_bar %}
+                    <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                    <div class="dataTables_paginate paging_full_numbers">
+                        {% if page_bar['left_bar'] %}
+                        <span class="first paginate_button">首页</span>
+                        <span class="previous paginate_button">上一页</span>
+                        {% end %}
+                        <span>
+                            {% for l in page_bar['left_bar'] %}
+                            <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                            {% end %}
+                            <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                            {% for r in page_bar['right_bar'] %}
+                            <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                            {% end %}     
+                        </span>
+                        {% if page_bar['right_bar'] %}
+                        <span class="next paginate_button">下一页</span>
+                        <span class="last paginate_button">末页</span>
+                        {% end %}
+                    </div>
+                {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

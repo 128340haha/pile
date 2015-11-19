@@ -1,0 +1,148 @@
+{% extends "frame.html" %}
+
+{% block title %}售卡站点{% end %}
+
+{% block javascript %}
+<script>
+function del(id){
+    if( confirm('您确定要删除该站点？') ){
+        window.location = '/admin/delete_seller?id='+id
+    }
+}
+
+function change_status( id ){
+    var img = $('#st_'+id)
+    if( img.attr('val') == 1 ){
+        var val = 0;
+    }else{
+        var val = 1;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/admin/seller_status",
+        data: "val="+val+'&id='+id+'&_xsrf='+getCookie("_xsrf"),
+        success: function(msg){
+            if( msg == '1' ){
+                if( val == 1 ){
+                    img.attr('src','{{ static_url("admin/css/icons/16/accept.png") }}')
+                }else{
+                    img.attr('src','{{ static_url("admin/css/icons/16/cross.png") }}')
+                }
+                img.attr('val',val)
+            }else{
+                alert( msg );
+            }
+        }
+    });
+}
+
+function change_duty(obj){
+    var val = obj.value
+    $.ajax({
+        type: "POST",
+        url: "/admin/ac_duty",
+        data: "duty="+val+'&id='+obj.id+'&_xsrf='+getCookie("_xsrf"),
+        success: function(msg){
+            if( msg == '1' ){
+                //通过
+            }else{
+                alert( '更改失败' );
+            }
+        }
+    });
+    
+}
+
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">售卡站点<input style="float:right; margin-right:20px;" type="button" onclick="javascript:window.location='/admin/new_seller';" value="添加站点" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">
+                <div class="dataTables_filter">
+                    <form name="form1" id="form1" method="get" action="#" >
+                        <label>站点名: <input name="sellername" type="text" value="{{ search['sellername'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <label>电话: <input name="phone" type="text" value="{{ search['phone'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <input type="submit" class="mws-button black small" value="搜索" >
+                    </form>
+                </div>
+                <table class="mws-table">
+                    <thead>
+                        <tr>
+                            <th>站点名</th>
+                            <th>电话</th>
+                            <th>账号</th>
+                            <th>负责人</th>
+                            <th>状态</th>
+                            <th>相关操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if slist %}
+                        {% raw xsrf_form_html() %}
+                        {% for lt in slist %}
+                        <tr class="gradeA">
+                            <td>{{ lt['sellername'] }}</td>
+                            <td>{{ lt['phone'] }}</td>
+                            <td>{{ lt['appid'] }}</td>
+                            <td><input type="input" id="{{ lt['id'] }}" style="text-align:center;" size="8" onchange="change_duty(this)" value="{{ lt['duty'] }}"></td>
+                            <td>
+                                <a href="javascript:void(change_status('{{ lt['id'] }}'))">
+                                <img val="{{ lt['status'] }}" id="st_{{ lt['id'] }}" {% if lt['status'] == 1 %}src="{{ static_url("admin/css/icons/16/accept.png") }}"{% else %}src="{{ static_url("admin/css/icons/16/cross.png") }}"{% end %}>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/admin/edit_seller?id={{ lt['id'] }}" ><img title="编辑" alt="充值记录" src="{{ static_url("admin/css/icons/16/edit.png") }}"></a>
+                                <a href="javascript:void(del('{{lt['id']}}'))" ><img title="删除站点" alt="删除站点" src="{{ static_url("admin/css/icons/16/cross.png") }}"></a>
+                                <a href="/admin/seller_records?id={{ lt['id'] }}" ><img title="充值记录" alt="充值记录" src="{{ static_url("admin/css/icons/16/money_dollar.png") }}"></a>
+                            </td>
+                        </tr>
+                        {% end %}
+                        {% else %}
+                        <tr class="gradeX">
+                            <td colspan="9">没有找到您要查找的信息</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            {% if page_bar %}
+                <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                <div class="dataTables_paginate paging_full_numbers">
+                    {% if page_bar['left_bar'] %}
+                    <a href="{{ page_bar['sign']['first'] }}"><span class="first paginate_button">首页</span></a>
+                    <a href="{{ page_bar['sign']['prev'] }}"><span class="previous paginate_button">上一页</span></a>
+                    {% end %}
+                    <span>
+                        {% for l in page_bar['left_bar'] %}
+                        <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                        {% end %}
+                        <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                        {% for r in page_bar['right_bar'] %}
+                        <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                        {% end %}     
+                    </span>
+                    {% if page_bar['right_bar'] %}
+                    <a href="{{ page_bar['sign']['next'] }}"><span class="next paginate_button">下一页</span></a>
+                    <a href="{{ page_bar['sign']['last'] }}"><span class="last paginate_button">末页</span></a>
+                    {% end %}
+               </div>
+            {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

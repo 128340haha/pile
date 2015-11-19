@@ -1,0 +1,138 @@
+{% extends "frame.html" %}
+
+{% block title %}用户列表{% end %}
+
+{% block javascript %}
+<script>
+function allbox(obj){
+    var children = $('.childbox');
+    if ( obj.checked == true ){
+        for( var box = 0; box < children.length; box++ ){
+            children[box].checked = true
+        }
+    }else{
+        for( var box = 0; box < children.length; box++ ){
+            children[box].checked = false
+        }
+    }
+}
+
+function act_user( model ){
+    var children = $('.childbox');
+    id = ''
+    for( var x=0; x<children.length; x++ ){
+        if ( children[x].checked == true ){
+            id += $(children[x]).attr('myid')+','
+        }
+    }
+    if( id == '' ){
+        alert('请选择您要操作的用户')
+        return
+    }else{
+        id = id.substring(0,id.length-1)
+    }
+    if( model == 2 ){
+        if( !confirm('彻底删除将完全抹去用户信息,余额,绑卡以及微信绑定关联,慎重操作') ){
+            return 
+        }
+    }
+    window.location = '/admin/kill_live?model='+model+'&id='+id
+}
+
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">用户列表</span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">
+
+                <div class="dataTables_filter">
+                    <form name="form1" id="form1" method="get" action="#" >
+                        <label>用户名: <input name="username" type="text" value="{{ search['username'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <input type="submit" class="mws-button black small" value="搜索" >
+                    </form>
+                </div>
+                <div class="mws-panel-toolbar top clearfix">
+                    <ul>
+                        <li><a href="javascript:void( act_user(1) )" class="mws-ic-16 ic-accept">还原</a></li>
+                        <li><a href="javascript:void( act_user(2) )" class="mws-ic-16 ic-cross">彻底删除</a></li>
+                    </ul>
+                </div>
+                <table class="mws-table">
+                    <thead>
+                        <tr>   
+                            <th><input type="checkbox" onclick="allbox(this)" name="checked" ></th>
+                            <th>用户名(昵称)</th>
+                            <th>注册时间</th>
+                            <th>注册ip</th>
+                            <th>邮箱</th>
+                            <th>电话</th>
+                            <th>余额</th>
+                            <th>累计消费</th>
+                            <th>相关操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if ulist %}
+                        {% raw xsrf_form_html() %}
+                        {% import time %}
+                        {% for lt in ulist %}
+                        <tr class="gradeA">
+                            <td><input type="checkbox" class="childbox" myid="{{lt['id']}}" ></td>
+                            <td>{{ lt['username'] }}{% if lt['nickname'] %}({{ lt['nickname'] }}){%end%}</td>
+                            <td>{{ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lt['reg_time'])) }}</td>
+                            <td>{{ lt['reg_ip'] }}</td>
+                            <td>{% if lt['mail'] %}{{ lt['mail'] }}{%else%}-{%end%}</td>
+                            <td>{% if lt['phone'] %}{{ lt['phone'] }}{%else%}-{%end%}</td>
+                            <td>{{ lt['balance'] }}</td>
+                            <td>{{ lt['payed'] }}</td>
+                            <td>
+                                <a href="/admin/recharge_list?id={{lt['id']}}"><img title="充电记录" alt="充电记录" src="{{ static_url("admin/css/icons/16/plug.png") }}"></a>&nbsp;&nbsp;&nbsp;
+                                <a href="#" url="/admin/deposit_list?id={{lt['id']}}" ><img title="充值记录" alt="充值记录" src="{{ static_url("admin/css/icons/16/money_dollar.png") }}"></a>&nbsp;&nbsp;&nbsp;
+                                <a href="/admin/user_details?id={{lt['id']}}"><img title="用户信息" alt="用户信息" src="{{ static_url("admin/css/icons/16/edit.png") }}"></a>
+                            </td>
+                        </tr>
+                        {% end %}
+                        {% else %}
+                        <tr class="gradeX">
+                            <td colspan="9">没有找到您要查找的用户</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+                {% if page_bar %}
+                    <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                    <div class="dataTables_paginate paging_full_numbers">
+                        {% if page_bar['left_bar'] %}
+                        <a href="{{ page_bar['sign']['first'] }}"><span class="first paginate_button">首页</span></a>
+                        <a href="{{ page_bar['sign']['prev'] }}"><span class="previous paginate_button">上一页</span></a>
+                        {% end %}
+                        <span>
+                            {% for l in page_bar['left_bar'] %}
+                            <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                            {% end %}
+                            <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                            {% for r in page_bar['right_bar'] %}
+                            <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                            {% end %}     
+                        </span>
+                        {% if page_bar['right_bar'] %}
+                        <a href="{{ page_bar['sign']['next'] }}"><span class="next paginate_button">下一页</span></a>
+                        <a href="{{ page_bar['sign']['last'] }}"><span class="last paginate_button">末页</span></a>
+                        {% end %}
+                   </div>
+                {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

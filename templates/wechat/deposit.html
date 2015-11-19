@@ -1,0 +1,52 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block header %}
+	<span class="back"><a href="/ucenter"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充值记录(页面模板)</span>
+{% end %}
+
+{% block body %}
+<section id="money-record">
+	<div class="data-date">
+    	<a href="#">30天内</a>
+        <a href="#">六个月</a>
+    </div>
+	<div class="data-list">
+    	<div class="list">
+            <div class="text">
+           		<div class="pull-left">
+                    <p class="mode">支付宝</p>
+                    <p class="time">2015-06-29 11:20:14</p>
+                </div>
+                <div class="pull-right">
+                    <p class="money"><span>+</span>100.00</p>
+                </div>
+            </div>
+        </div>
+         <div class="list">
+            <div class="text">
+           		<div class="pull-left">
+                    <p class="mode">微信钱包</p>
+                    <p class="time">2015-06-29 11:20:14</p>
+                </div>
+                <div class="pull-right">
+                    <p class="money"><span>+</span>100.00</p>
+                </div>
+            </div>
+        </div>
+        <div class="list">
+            <div class="text">
+           		<div class="pull-left">
+                    <p class="mode">网银</p>
+                    <p class="time">2015-06-29 11:20:14</p>
+                </div>
+                <div class="pull-right">
+                    <p class="money"><span>+</span>100.00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% end %}

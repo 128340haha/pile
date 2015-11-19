@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- Required Stylesheets -->
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/reset.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/text.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/fonts/ptsans/stylesheet.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/fluid.css") }}" media="screen" />
+
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/mws.style.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/icons/icons.css") }}" media="screen" />
+
+<!-- Demo and Plugin Stylesheets -->
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/demo.css") }}" media="screen" />
+
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/colorpicker/colorpicker.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/jimgareaselect/css/imgareaselect-default.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/fullcalendar/fullcalendar.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/fullcalendar/fullcalendar.print.css") }}" media="print" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/tipsy/tipsy.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/sourcerer/Sourcerer-1.2.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/jgrowl/jquery.jgrowl.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/spinner/spinner.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/jui/jquery.ui.css") }}" media="screen" />
+
+<!-- Theme Stylesheet -->
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/css/mws.theme.css") }}" media="screen" />
+
+<!-- JavaScript Plugins -->
+
+<script type="text/javascript" src="{{ static_url("admin/js/jquery-1.7.1.min.js") }}"></script>
+
+<title>后台登录</title>
+<script>
+    function check_param(){
+        un = $('input[name=admin]').val();
+        pw = $('input[name=passowrd]').val();
+        if ( un == '' ){
+            alert('账号不能为空');
+            return false;
+        }
+        if( pw == '' ){
+            alert('密码不能为空');
+            return false
+        }
+        return true
+    }
+
+    function refreshCode(obj) {
+        $(obj).attr('src', "/validcode?v=" + Math.random() );
+    }
+</script>
+
+</head>
+
+<body>
+
+	<div id="mws-login">
+    	<h1>管理后台登录</h1>
+        <div class="mws-login-lock"><img src="{{ static_url("admin/css/icons/24/locked-2.png") }}" alt="" /></div>
+    	<div id="mws-login-form">
+        	<form class="mws-form" action="/admin/act_login" method="post" onsubmit="return check_param()">
+            {% raw xsrf_form_html() %}
+                <div class="mws-form-row">
+                	<div class="mws-form-item large">
+                    	<input type="text" name="admin" class="mws-login-username mws-textinput" value="{{ admin }}" placeholder="管理员" />
+                    </div>
+                </div>
+                <div class="mws-form-row">
+                	<div class="mws-form-item large">
+                    	<input type="password" name="password" class="mws-login-password mws-textinput" placeholder="密码" />
+                    </div>
+                </div>
+                {% if not nocaptcha %}
+                <div class="mws-form-row">
+                    <input type="text" class="mws-textinput" size=12 name="captcha" placeholder="验证码"/>
+                    <div class="tips"><i class="fa fa-times"></i></div>
+                    <span><img src="/validcode" alt="验证码获取失败" onclick="refreshCode(this)" /></span>
+                </div>
+                {% end %}
+                <span id='mess' style="color:red;">{{ message }}</span>
+                <div class="mws-form-row">
+                	<input type="submit" value="登录" class="mws-button green mws-login-button" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

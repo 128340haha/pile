@@ -1,0 +1,110 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block javascript %}
+    <script>
+	function refreshCode(obj) {
+ 		$(obj).attr('src', "/validcode?v=" + Math.random() );
+	}
+    </script>
+{% end %}
+
+{% block header %}
+	<span class="back">
+    <a href="/wechat">
+        <i class="fa fa-chevron-left"></i>Black
+    </a>
+    </span>
+    <span class="title"><img src="{{ static_url("wechat/images/logo.png") }}"/></span>
+    <span class="register">
+    <a href="/register">
+        注册
+    </a>
+    </span>
+{% end %}
+
+{% block body %}
+	<section id="login">
+	<form method="post" id="form1" name="form1" action="/act_login" >
+	{% raw xsrf_form_html() %}
+    <div class="login-input">
+        <div class="l-list">
+            <input type="text" class="inpt" name="username"  placeholder="用户名"/>
+            <div class="tips"><i class="fa fa-times"></i></div>
+            <span><img src="{{ static_url("wechat/images/login-username.png") }}"/	></span>
+        </div>
+        <div class="l-list">
+            <input type="password" class="inpt" name="password" placeholder="密码"/>
+            <div class="tips"><i class="fa fa-times"></i></div>
+            <span><img src="{{ static_url("wechat/images/login-password.png") }}"/	></span>
+        </div>
+        {% if not nocaptcha %}
+        <div class="l-list ver">
+            <input type="text" class="inpt" name="captcha" placeholder="验证码"/>
+            <div class="tips"><i class="fa fa-times"></i></div>
+            <span><img src="/validcode" alt="验证码获取失败" onclick="refreshCode(this)" /></span>
+        </div>
+        {% end %}
+    </div>
+    <div class="login-btn">
+        <a href="javascript:;" id="submit">
+            绑定
+        </a>
+    </div>
+    <div class="login-tips">
+        <a href="#">
+            忘记了密码?
+        </a>
+    </div>
+    </form>
+    
+    <div class="verify">
+        <div class="verify-head">
+            <a id="exit" href="javascript:;">
+                <i class="fa fa-times"></i>
+            </a>
+            绑定验证 
+        </div>
+    </div>
+    <div class="layer"></div>
+</section>
+{% end %}
+
+{% block footer %}
+<script>
+$(document).ready(function () {
+ 	
+    $('#submit').click(function () {
+ 	token = 0
+	  $('#login .login-input .l-list > input').each(function() {
+        
+		if($(this).val()==''){
+		
+			$(this).siblings('.tips').addClass('show');
+			token++
+		}else{
+						
+			$(this).siblings('.tips').removeClass('show');
+			  
+		}
+ 
+     });
+	 if( token == 0 ){
+	 	$('#form1').submit();
+	 }
+  });
+
+  $('.inpt').keyup(function () { 
+  		if($(this).val()==''){
+		
+			$(this).siblings('.tips').addClass('show');
+		}else{
+						
+			$(this).siblings('.tips').removeClass('show');
+			  
+		}
+  });
+});
+</script>
+{% end %}

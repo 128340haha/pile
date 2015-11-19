@@ -1,0 +1,76 @@
+{% extends "frame.html" %}
+
+{% block title %}站点设置{% end %}
+
+{% block javascript %}
+<script type="text/javascript" src="{{ static_url("admin/plugins/elrte/js/elrte.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("admin/plugins/elfinder/js/elfinder.min.js") }}"></script>
+
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/elrte/css/elrte.full.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/elfinder/css/elfinder.css") }}" media="screen" />
+
+<script type="text/javascript" src="{{ static_url("admin/js/demo.formelements.js") }}"></script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+    	<div class="mws-panel-header">
+        	<span class="mws-i-24 i-list">系统参数</span>
+        </div>
+        <div class="mws-panel-body">
+        	<form class="mws-form" action="/admin/act_set" method="post">
+                {% raw xsrf_form_html() %}
+        		<div class="mws-form-inline">
+        			<div class="mws-form-row">
+        				<label>初始用户赠送金额</label>
+        				<div class="mws-form-item">
+                            <input type="text" name="reg_gift" id="s1" class="mws-textinput ui-spinner-box" value="{{ setting['reg_gift'] }}" autocomplete="off">
+        				</div>
+        			</div>
+                    <div class="mws-form-row">
+                        <label>电桩心跳提醒极限(单位：分)</label>
+                        <div class="mws-form-item">
+                            <input type="text" name="device_pass" id="s4" class="mws-textinput ui-spinner-box" value="{{ setting['device_pass'] }}" autocomplete="off">
+                        </div>
+                    </div>
+        			<div class="mws-form-row">
+        				<label>用户注册功能</label>
+        					<div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input {% if setting['register'] == '1' %}checked{% end %} name="register" type="radio" value="1" /> <label>开</label></li>
+                                <li><input {% if setting['register'] == '0' %}checked{% end %} name="register" type="radio" value="0" /> <label>关</label></li>
+                            </ul>
+                        </div>
+        			</div>
+        			<div class="mws-form-row">
+        				<label>用户充值功能</label>
+        				<div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input {% if setting['deposit'] == '1' %}checked{% end %} name="deposit" type="radio" value="1" /> <label>开</label></li>
+                                <li><input {% if setting['deposit'] == '0' %}checked{% end %} name="deposit" type="radio" value="0" /> <label>关</label></li>
+                            </ul>
+                        </div>
+        			</div>
+                    <div class="mws-form-row">
+                        <label>微信访问通道</label>
+                        <div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input {% if setting['wechat'] == '1' %}checked{% end %} name="wechat" type="radio" value="1" /> <label>开</label></li>
+                                <li><input {% if setting['wechat'] == '0' %}checked{% end %} name="wechat" type="radio" value="0" /> <label>关</label></li>
+                            </ul>
+                        </div>
+                    </div>
+        		</div>
+        		<div class="mws-button-row">
+        			<input type="submit" value="提交" class="mws-button green" />
+        		</div>
+        	</form>
+        </div>    	
+    </div>
+</div>
+
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

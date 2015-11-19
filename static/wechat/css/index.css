@@ -1,0 +1,261 @@
+﻿/* css  reset */
+html, body { font-size: 14px; font-size: 14px\9; height: 100%; margin: 0; }
+body { font-family: Helvetica, Tahoma, Arial, "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif; overflow-y: scroll; }
+@media (max-width: 991px) {
+html, body, form { font-size: 13px; font-size: 13px\9; }
+}
+@media (max-width: 767px) {
+html, body, form { font-size: 12px; font-size: 12px\9; }
+}
+h1 { font-size: 3em; margin: 0; font-weight: bold; }
+h3 { font-size: 2em; margin: 0; font-weight: bold; }
+h4 { font-size: 1.3em; margin: 0; font-weight: bold; }
+small { margin-left: 5px; }
+a, a:hover, a:focus { text-decoration: none; outline: none; }
+a { color: #34393b; }
+a:hover, a:focus { color: #444; }
+/* WP8 and IE10 hack */
+@-webkit-viewport {
+width: device-width;
+}
+@-moz-viewport {
+width: device-width;
+}
+@-ms-viewport {
+width: device-width;
+}
+@-o-viewport {
+width: device-width;
+}
+@viewport {
+width: device-width;
+}
+.ie { height: 100%; width: 100%; background: url(../images/404.jpg) no-repeat center center #F3F2EE; position: fixed; z-index: 999999; }
+body { background: #ECECEC; }
+header { width: 100%; height: 50px; color: #0093FF; background: #F8F8F8; border-bottom: 1px solid #E0E0E0; position: relative; z-index: 2; }
+header * { color: #0093FF; }
+header .register { height: 50px; line-height: 50px; position: absolute; right: 10px; top: 0; font-size: 1.3em; }
+header .back { height: 50px; line-height: 50px; position: absolute; left: 10px; top: 0; font-size: 1.3em; }
+header .back > a > i { margin-right: 5px; }
+header .title { width: 100%; height: 50px; line-height: 50px; text-align: center; display: block; font-size: 1.6em; }
+/*--- 登陆 ---*/
+#login { background: #fff; height: 100%; margin-top: -50px; padding: 70px 10% 20px; overflow: hidden; }
+#login .login-input { width: 100%; margin: auto; }
+#login .login-input .l-list { width: 100%; height: 50px; padding-right: 50px; border: 1px solid #CDCDCD; position: relative; border-radius: 5px; margin-bottom: 10px; }
+#login .login-input .l-list > input { width: 100%; height: 50px; border: none; line-height: 50px; padding: 0 50px 0 15px; outline: none; background: none; font-size: 1.2em; }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#login .login-input .l-list > input { font: 14px "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif; }
+}
+#login .login-input .l-list > span { width: 40px; height: 40px; position: absolute; right: 5px; top: 5px; }
+#login .login-input .l-list > span:after { width: 1px; height: 20px; content: ''; background: #CDCDCD; position: absolute; left: -5px; top: 10px; }
+#login .login-input .l-list .tips { width: 40px; height: 40px; color: #BD2D30; display: none; text-align: center; font-size: 1.2em; position: absolute; right: 55px; top: 5px; }
+#login .login-input .l-list .tips > i { line-height: 40px; }
+#login .login-input .l-list .tips.show { display: block; }
+#login .login-btn { width: 100%; height: 50px; line-height: 50px; text-align: center; margin: 20px auto 10px; border-radius: 5px; font-size: 1.3em; background: #00A0FF; }
+#login .login-btn > a { display: block; color: #fff; }
+#login .login-tips { width: 240px; margin: auto; text-align: center; }
+#login .login-tips > a { color: #A7A7A7; }
+#login .login-input .l-list.ver { padding-right: 100px; }
+#login .login-input .l-list.ver > span { width: 100px; }
+#login .login-input .l-list.ver .tips { right: 115px; }
+/*--- 注册 ---*/
+#register { padding: 20px; }
+#register .register-input { width: 100%; background: #fff; margin-bottom: 20px; border-radius: 5px; box-shadow: 0 1px 3px #ccc; }
+#register .register-input .r-list { width: 100%; height: 50px; padding-left: 50px; position: relative; border-bottom: 1px solid #ECECEC; }
+#register .register-input .r-list > input { border: none; width: 100%; height: 50px; line-height: 50px; padding: 0 15px; outline: none; background: none; font-size: 1.2em; }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#register .register-input .r-list > input { font: 14px "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif; }
+}
+#register .register-input .r-list > span { width: 40px; height: 40px; position: absolute; left: 5px; top: 5px; }
+#register .register-input .popover { top: 30px; right: 0px; left: auto; text-align: center; }
+#register .register-btn { width: 100%; height: 50px; line-height: 50px; text-align: center; margin: 0 auto 10px; border-radius: 5px; font-size: 1.3em; background: #00A0FF; }
+#register .register-btn > a { display: block; color: #fff; }
+/*--- 验证 ---*/
+.verify { width: 100%; margin: 0 auto; overflow: hidden; position: fixed; bottom: -50%; left: 0; opacity: 0; visibility: hidden; background: #fff; box-shadow: 0 -3px 10px rgba(0,0,0,0.6); z-index: 10; transition: all .3s ease-in-out; }
+.verify.show { bottom: 0; opacity: 1; visibility: visible; }
+.gt_wrapper { margin: auto; }
+.verify-head { width: 100%; height: 50px; line-height: 50px; font-size: 1.3em; border-bottom: 1px solid #E0E0E0; background: #F8F8F8; color: #0093FF; margin-bottom: 20px; position: relative; text-align: center; }
+.verify-head #exit { width: 50px; height: 50px; position: absolute; right: 0; top: 0; color: #A7A7A7; }
+.verify-head #exit > i { line-height: 50px; }
+.layer { width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: #000; opacity: 0; visibility: hidden; z-index: 1; transition: all .3s ease-in-out; }
+.layer.show { opacity: 0.8; visibility: visible; }
+/*--- 首页 ---*/
+#main { background: #fff; }
+#main .user { width: 100%; height: 200px; position: relative; background: url(../images/head.jpg) no-repeat scroll center center / cover; margin-bottom: 70px; }
+#main .user:after { content: ''; width: 100%; height: 1px; position: absolute; bottom: -70px; left: 0; background: #e4e4e4; }
+#main .user .u-img { width: 100px; height: 100px; position: absolute; bottom: -50px; left: 10px; box-shadow: 0 1px 5px #999; border-radius: 5px; overflow: hidden; }
+#main .user .u-txt { width: 100%; height: 50px; position: absolute; bottom: -50px; left: 0; padding: 10px 0 10px 110px; }
+#main .user .u-txt > p { margin: 0 0 0 15px; line-height: 30px; font-size: 1.3em; color: #333; display: inline-block; }
+#main .user .u-txt > p > i { color: #BDBDBD; margin-right: 5px; }
+#main .menu { width: 100%; }
+#main .menu .m-list { display: block; width: 100%; height: 60px; position: relative; padding-left: 70px; }
+#main .menu .m-list > span { position: absolute; left: 0; top: 0; display: block; width: 60px; height: 60px; }
+#main .menu .m-list > p { margin: 0; width: 100%; height: 60px; border-bottom: 1px solid #ECECEE; line-height: 60px; font-size: 1.3em; }
+#main .menu .m-list > p:after { position: absolute; right: 10px; top: 0; width: 15px; height: 60px; line-height: 60px; content: "\f105"; font-family: 'FontAwesome'; }
+/*--- 用户中心 ---*/
+#user { padding-bottom: 20px; }
+#user .user { width: 100%; height: 200px; position: relative; background: url(../images/user-bg.jpg) no-repeat scroll center center / cover; }
+#user .user .u-img { width: 120px; height: 120px; padding: 5px; position: absolute; top: 20px; left: 50%; margin-left: -60px; background: rgba(255,255,255,0.2); box-shadow: 0 1px 5px #999; border-radius: 50%; overflow: hidden; }
+#user .user .u-img > span { width: 110px; height: 110px; border-radius: 50%; overflow: hidden; display: block; }
+#user .user .u-txt { width: 100%; height: 30px; position: absolute; bottom: 20px; left: 0; text-align: center; }
+#user .user .u-txt > span { line-height: 30px; font-size: 1.3em; color: #333; }
+#user .tips { width: 100%; height: 40px; background: #F0F2F6; border-bottom: 1px solid #ECECEC; position: relative; font-size: 1.1em; color: #A7A7A7; }
+#user .tips .txt { position: absolute; left: 10px; top: 0; line-height: 40px; margin: 0; }
+#user .tips .num { position: absolute; right: 10px; top: 0; line-height: 40px; margin: 0; }
+#user .tips .num #balance { margin-left: 5px; }
+#user .menu .m-list { display: block; width: 100%; height: 60px; background: #fff; position: relative; padding-left: 70px; overflow: hidden; }
+#user .menu .m-list > span { position: absolute; left: 0; top: 0; display: block; width: 60px; height: 60px; }
+#user .menu .m-list > p { margin: 0; width: 100%; height: 60px; padding: 10px 0; border-bottom: 1px solid #ECECEE; line-height: 40px; font-size: 1.3em; }
+#user .menu .m-list > i { position: absolute; right: 10px; top: 0; width: 15px; height: 60px; line-height: 60px; content: "\f105"; font-family: 'FontAwesome'; font-size: 1.3em; }
+#user .menu .m-list > p .title { display: block; margin: 0; height: 20px; line-height: 20px; font-size: 0.8em; color: #A7A7A7; }
+#user .menu .m-list > p .text { display: block; margin: 0; height: 20px; line-height: 20px; font-size: 0.9em; }
+#user .menu .m-list .set-btn { position: absolute; right: 0; top: 0; display: block; width: 60px; height: 60px; }
+#user .menu .m-list .set { position: absolute; right: -100%; top: 0; width: 100%; height: 60px; background: url(../images/user-bg.jpg) no-repeat scroll center center / cover; transition: all .3s ease-in-out; }
+#user .menu .m-list .set.active { right: 0; }
+#user .menu .m-list .set > p { margin: 0; width: 100%; height: 60px; padding: 15px 130px 15px 10px; font-size: 1.3em; position: relative; }
+#user .menu .m-list .set > p > input { width: 100%; height: 30px; border: 0; line-height: 30px; background: rgba(0,0,0,0.3); padding: 0 10px; border-bottom: 1px solid #A7A7A7; outline: none; border-radius: 3px; }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#user .menu .m-list .set > p > input { font: 14px "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif; }
+}
+#user .menu .m-list .set > p > input#surname { width: 35%; float: left; margin-right: 5%; }
+#user .menu .m-list .set > p > input#name { width: 60%; float: left; }
+#user .menu .m-list .set > p > label { margin: 0 10px 0 0; height: 40px; line-height: 40px; color: #fff; font-weight: normal; }
+#user .menu .m-list .set > div { width: 115px; height: 60px; position: absolute; right: 0; top: 0; text-align: center; padding-right: 10px; }
+#user .menu .m-list .set > div > a { display: block; float: left; width: 50px; height: 30px; line-height: 30px; margin-top: 15px; font-size: 0.9em; text-align: center; background: #fff; color: #000; border-radius: 3px; }
+#user .menu .m-list .set > div > a.backup { margin-left: 5px; }
+/*--- 充电 ---*/
+#charge { padding: 20px; }
+#charge .charge-title { width: 100%; height: 50px; text-align: center; line-height: 50px; font-size: 1.3em; margin-bottom: 20px; }
+#charge .charge-input { width: 100%; height: 50px; margin: 0 0 20px 0; position: relative; }
+#charge .charge-input > input { width: 100%; height: 50px; border: none; background: #fff; text-align: center; color: #333; font-size: 1.6em; outline: none; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4); padding-right: 60px; padding-left: 10px; }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#charge .charge-input > input { font: 14px "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif; }
+}
+#charge .charge-input > span { width: 60px; height: 50px; line-height: 50px; text-align: center; color: #fff; border-color: #eee; position: absolute; right: 0; top: 0; }
+#charge .charge-input > span > a { color: #666; font-size: 2.4em; }
+#charge .charge-input > span > a > i { line-height: 50px; }
+#charge .charge-btn { text-align: center; background: linear-gradient(#34a5f8, #0093FF); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#34a5f8), to(#0093FF)); box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15); border: 1px solid #0093FF; }
+#charge .charge-btn > a { display: block; width: 100%; padding: 9px; color: #fff; font-size: 1.3em; }
+#charge .charge-number { width: 100%; height: 50px; text-align: center; line-height: 50px; font-size: 1.6em; box-shadow: 0 1px 3px #ccc; color: #70CF1C; background: #fff; }
+#charge .charge-balance { width: 100%; height: 40px; margin: 10px 0; line-height: 40px; text-align: right; color: #A7A7A7; font-size: 1.2em; }
+#charge .charge-balance span { font-size: 1.3em; margin: 0 2px; color: #70CF1C; }
+#charge .charge-balance .price { float: left; margin: 0; }
+#charge .charge-balance .balance { float: right; margin: 0; }
+#charge .charge-options { width: 100%; text-align: center; margin-bottom: 20px; }
+#charge .charge-options .o-box { position: relative; width: 100%; height: 200px; margin: auto; overflow: hidden; box-shadow: 0 1px 3px #ccc; }
+#charge .charge-options .o-box .o-list { width: 100%; position: absolute; left: 0; top: 0; background: #fff; -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0 ); -webkit-transition: all .5s ease-in-out; transition: all .5s ease-in-out; opacity: 1; visibility: visible; }
+#charge .charge-options .o-box .o-list.active { -webkit-transform: translate3d(-100px, 0, 0); transform: translate3d(-100px, 0, 0 ); opacity: 0; visibility: hidden; }
+#charge .charge-options .o-box .o-list .list { width: 100%; height: 50px; padding: 0 10px; line-height: 50px; font-size: 1.3em; text-align: left; border-bottom: 1px solid #ECECEC; position: relative; }
+#charge .charge-options .o-box .o-list .list:after { content: "\f054"; font-family: 'FontAwesome'; position: absolute; right: 10px; top: 0; width: 20px; height: 50px; line-height: 50px; color: #A7A7A7; }
+#charge .charge-options .o-box .o-content { width: 100%; position: absolute; top: 0; left: 0; -webkit-transform: translate3d(80%, 0, 0); transform: translate3d(80%, 0, 0 ); -webkit-transition: all .5s ease-in-out; transition: all .5s ease-in-out; opacity: 0; visibility: hidden; }
+#charge .charge-options .o-box .o-content.active { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0 ); opacity: 1; visibility: visible; }
+#charge .charge-options .o-box .o-content .content { width: 100%; background: #fff; position: absolute; top: 0; left: 0; z-index: 1; -webkit-transition: all .5s ease-in-out; transition: all .5s ease-in-out; visibility: hidden; opacity: 0; }
+#charge .charge-options .o-box .o-content .content.active { z-index: 2; visibility: visible; opacity: 1; }
+#charge .charge-options .o-box .o-content .content .head { width: 100%; height: 50px; line-height: 50px; font-size: 1.3em; border-bottom: 1px solid #ECECEC; }
+#charge .charge-options .o-box .o-content .content .head .back { width: 50px; position: absolute; left: 0; top: 0; color: #A7A7A7; }
+#charge .charge-options .o-box .o-content .content .head .back > i { line-height: 50px; }
+#charge .charge-options .o-box .o-content .content .text { padding: 10px; }
+#charge .charge-options .o-box .o-content .content .text > h4 { line-height: 40px; font-size: 1.3em; color: #A7A7A7; margin: 30px auto; }
+#charge .charge-options .o-box .o-content .content .text > h4 > span { color: #70CF1C; font-size: 1.6em; margin: 0 5px; }
+#charge .charge-options .o-box .o-content .content .text .o-input { width: 120px; height: 40px; margin: 30px auto; position: relative; border: 1px solid #ECECEC; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4); }
+#charge .charge-options .o-box .o-content .content .text .o-input > label { position: absolute; left: 0; top: -40px; width: 40px; height: 40px; line-height: 40px; font-size: 1.6em; color: #A7A7A7; -webkit-transition: all .3s ease-in-out; transition: all .3s ease-in-out; }
+#charge .charge-options .o-box .o-content .content .text .o-input >input { width: 100%; height: 40px; border: none; font-size: 2em; text-align: center; outline: none; background: none; }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#charge .charge-options .o-box .o-content .content .text .o-input >input { font: 14px "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif; }
+}
+#charge .charge-options .o-box .o-content .content .text .tips { color: #A7A7A7; }
+#charge .charge-options .o-box .o-content .content .text .tips > div > p { display: inline-block; margin: 0 10px; }
+#charge .charge-options .o-box .o-content .content .text .tips span { color: #70CF1C; font-size: 1.3em; margin: 0 5px; }
+/*--- 正在充电 ---*/
+#charging { padding: 20px; }
+#charging .charging-title { width: 100%; height: 50px; text-align: center; color: #70CF1C; margin-bottom: 20px; }
+#charging .charging-title > span { display: inline-block; }
+#charging .charging-title > span > i { font-size: 3em; float: left; display: block; height: 50px; line-height: 50px; }
+#charging .charging-title > span > span { font-size: 2em; float: right; display: block; margin-left: 5px; height: 50px; line-height: 50px; }
+#charging .charging-content { background: #fff; box-shadow: 0 1px 3px #ccc; margin-bottom: 20px; }
+#charging .charging-content .c-list { height: 50px; line-height: 50px; padding: 0 10px; font-size: 1.3em; border-bottom: 1px solid #ECECEC; }
+#charging .charging-content .c-list > span { color: #70CF1C; }
+#charging .charging-content .c-list > span.big { font-size: 1.2em; }
+#charging .charging-content .c-title { width:100%; height:40px; line-height: 40px; font-weight: bolder; color: #0093FF; font-size: 1.3em;  padding: 0 10px;border-bottom: 1px solid #ECECEC;} 
+#charging .charging-btn { text-align: center; background: linear-gradient(#FF5C69, #FF2939); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#FF5C69), to(#FF2939));box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15); border: 1px solid #FF2939; }
+#charging .charging-btn > a { display: block; width: 100%; padding: 9px; color: #fff; font-size: 1.3em; }
+/*--- 充电记录 ---*/
+#charge-record { padding: 20px; }
+#charge-record .data-date { width: 100%; height: 30px; text-align: center; margin-bottom: 20px; }
+#charge-record .data-date > a { display: inline-block; width: 80px; height: 30px; line-height: 30px; color: #727272; background: linear-gradient(#f6f6f6, #DFE1E0); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#DFE1E0)); border: 1px solid #CFCFCF; box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15); border-radius: 200px; margin: 0 10px; }
+#charge-record .data-date > a.active { background: linear-gradient(#34a5f8, #0093FF); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#34a5f8), to(#0093FF)); border: 1px solid #0093FF; color: #fff; }
+#charge-record .data-list { width: 100%; margin: auto; background: #fff; box-shadow: 0 1px 3px #ccc; }
+#charge-record .data-list .list { border-bottom: 1px solid #ECECEC; padding: 10px; }
+#charge-record .data-list .list .title { width: 100%; height: 30px; line-height: 30px; color: #A7A7A7; position:relative; }
+#charge-record .data-list .list .title > div.left{ position:absolute; left:0; top:0;}
+#charge-record .data-list .list .title > div.right{ position:absolute; right:0; top:0;}
+#charge-record .data-list .list .text { width: 100%; height: 30px; line-height: 30px; position:relative; }
+#charge-record .data-list .list .text > div.left{ position:absolute; left:0; top:0;}
+#charge-record .data-list .list .text > div.right{ position:absolute; right:0; top:0;}
+#charge-record .data-list .list .text > div .address { height: 25px; line-height: 25px; }
+#charge-record .data-list .list .text > div .num { height: 20px; line-height: 20px; color: #A7A7A7; }
+#charge-record .data-list .list .text > div .power { height: 25px; line-height: 25px; font-size: 1.3em; }
+#charge-record .data-list .list .text > div .power > span { margin: 0 5px; color: #ccc; }
+#charge-record .data-list .list .text > div .power > small { color: #A7A7A7; }
+#charge-record .data-list .list .text > div .money { text-align: right; height: 20px; line-height: 20px; color: #A7A7A7; }
+#charge-record .data-list .list .text > div .money > big { margin-left: 5px; }
+#charge-record .data-more { width: 100%; height: 40px; background: #fff; text-align: center; line-height: 40px; margin-top: 20px; color: #000; font-size: 1.2em; box-shadow: 0 1px 3px #ccc; }
+/*--- 充电详情 ---*/
+#charge-detail{ width:100%; height:100%; margin-top:-50px; padding-top:50px; background:#fff;}
+#charge-detail .title{ position:relative; width:100%; height:80px; padding:20px; }
+#charge-detail .title .list{ position:relative; width:100%; height:40px; line-height:40px; font-size:1.2em;}
+#charge-detail .title .left{ position:absolute; left:0; top:0; color:#bbb; }
+#charge-detail .title .right{ position:absolute; right:0; top:0;  font-size:1.6em; color:#70CF1C;}
+#charge-detail .text{  border-top:1px solid #E0E0E0; border-bottom:1px solid #E0E0E0; padding:20px; }
+#charge-detail .text .list{ position:relative; width:100%; height:30px; line-height:30px; font-size:1.2em;}
+#charge-detail .text .list .left{ position:absolute; left:0; top:0; color:#bbb; }
+#charge-detail .text .list .right{ position:absolute; right:0; top:0;}
+ 
+/*--- 充值 ---*/
+#money { padding: 20px; }
+#money .money-title { width: 100%; height: 50px; text-align: center; line-height: 50px; font-size: 1.3em; margin-bottom: 20px; }
+#money .money-balance { width: 100%; height: 40px; margin: 10px 0; line-height: 40px; text-align: right; color: #A7A7A7; font-size: 1.2em; }
+#money .money-balance span { font-size: 1.3em; margin: 0 2px; color: #70CF1C; }
+#money .money-input { width: 100%; height: 50px; margin: auto; position: relative; font-size: 1.6em; }
+#money .money-input > input { width: 100%; height: 50px; border: none; background: #fff; text-align: center; color: #333; outline: none; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4); }
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+#money .money-input > input { font: 14px "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif; }
+}
+#money .money-input > span { width: 60px; height: 50px; line-height: 50px; text-align: center; color: #A7A7A7; position: absolute; right: 0; top: 0; }
+.money-options { background: #fff; margin: 0 0 20px 0; box-shadow: 0 1px 3px #ccc; }
+.money-options .m-list { width: 100%; height: 60px; border-bottom: 1px solid #ECECEC; padding: 10px 10px 10px 60px; position: relative; }
+.money-options .m-list > span { width: 40px; height: 40px; position: absolute; left: 10px; top: 10px; }
+.money-options .m-list > p { margin: 0; font-size: 1.3em; }
+.money-options .m-list > p > small { margin: 0; font-size: 0.8em; color: #A7A7A7; }
+.money-options .m-list .check { position: absolute; right: 10px; top: 15px; margin: 0; width: 30px; height: 30px; text-align: center; border-radius: 50%; border: 1px solid #A7A7A7; }
+.money-options .m-list .check.active { border: 1px solid #0093FF; }
+.money-options .m-list .check.active > i { display: block; color: #0093FF; }
+.money-options .m-list .check > i { font-size: 1.3em; display: none; line-height: 30px; }
+#money .money-btn { text-align: center; background: linear-gradient(#34a5f8, #0093FF); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#34a5f8), to(#0093FF)); box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15); border: 1px solid #0093FF; }
+#money .money-btn > a { display: block; width: 100%; padding: 9px; color: #fff; font-size: 1.3em; }
+/*--- 充值记录 ---*/
+#money-record { padding: 20px; }
+#money-record .data-date { width: 100%; height: 30px; text-align: center; margin-bottom: 20px; }
+#money-record .data-date > a { display: inline-block; width: 80px; height: 30px; line-height: 30px; color: #727272; background: linear-gradient(#f6f6f6, #DFE1E0); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f6f6f6), to(#DFE1E0)); border: 1px solid #CFCFCF; box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.15); border-radius: 200px; margin: 0 10px; }
+#money-record .data-date > a.active { background: linear-gradient(#34a5f8, #0093FF); background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#34a5f8), to(#0093FF)); border: 1px solid #0093FF; color: #fff; }
+#money-record .data-list { width: 100%; margin: auto; background: #fff; box-shadow: 0 1px 3px #ccc; }
+#money-record .data-list .list { border-bottom: 1px solid #ECECEC; padding: 10px; }
+#money-record .data-list .list .date { width: 100%; height: 30px; line-height: 30px; font-size: 1.3em; color: #A7A7A7; }
+#money-record .data-list .list .text { width: 100%; height: 45px; }
+#money-record .data-list .list .text > div { height: 45px; }
+#money-record .data-list .list .text > div > p { margin: 0; }
+#money-record .data-list .list .text > div .mode { height: 25px; line-height: 25px; font-size: 1.3em; }
+#money-record .data-list .list .text > div .time { height: 20px; line-height: 20px; color: #A7A7A7; }
+#money-record .data-list .list .text > div .money { height: 45px; line-height: 45px; color: #70CF1C; font-size: 1.6em; }
+#money-record .data-more { width: 100%; height: 40px; background: #fff; text-align: center; line-height: 40px; margin-top: 20px; color: #000; font-size: 1.2em; box-shadow: 0 1px 3px #ccc; }
+/*--- 状态页 ---*/
+#status { padding: 20px; }
+#status .title { width: 100%; height: 50px; text-align: center; margin-bottom: 20px; }
+#status .title > span { display: inline-block; }
+#status .title > span > i { font-size: 3em; float: left; display: block; height: 50px; line-height: 50px; font-family: 'FontAwesome'; }
+#status .title > span > span { font-size: 2em; float: right; display: block; margin-left: 5px; height: 50px; line-height: 50px; }
+#status .content { background: #fff; box-shadow: 0 1px 3px #ccc; min-height: 50px; line-height: 50px; padding: 0 10px; font-size: 1.3em; }
+#status.success .title, #status.success .content > span { color: #70CF1C; }
+#status.success .title > span > i:before { content: "\f058" }
+#status.error .title, #status.error .content > span { color: #BD2D30; }
+#status.error .title > span > i:before { content: "\f057" }

@@ -1,0 +1,117 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block header %}
+	<span class="back"><a href="/ucenter"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充电记录</span>
+{% end %}
+
+{% block body %}
+{% raw xsrf_form_html() %}
+<section id="charge-record">
+	<div class="data-date">
+    	<a {% if st == '1' %}class="active"{% end %} href="/recharge_list?st=1">30天内</a>
+        <a {% if st == '2' %}class="active"{% end %} href="/recharge_list?st=2">六个月</a>
+    </div>
+	<div class="data-list">
+        {% import time %}
+        {% if clist %}
+            {% for lt in clist %}
+            <div class="list" onclick="javascript:window.location='/charge_detail?id={{ lt['oid'] }}'">
+                <!--改动-->
+                <div class="title">
+                    <div class="left">
+                        <span class="date">{{ time.strftime("%Y-%m-%d", time.localtime(lt['creatime'])) }}</span>
+                    </div>
+                    <div class="right">
+                        <span class="num">充电桩：<big>{{ lt['code'] }}</big></span>  
+                    </div>
+                </div>
+                <div class="text">
+                    <div class="left">
+                        <span class="address">{{ lt['name'] }}</span>
+                    </div>
+                    <div class="right">
+                        <span class="power">{{ lt['electricity'] }}<small>KWH</small><span>/</span>{{ lt['pay'] }}<small>RMB</small></span>
+                    </div>
+                </div>
+            </div> 
+            {% end %}
+        {% else %}
+            <div class="list">
+                没有找到您的订单记录
+            </div>
+        {% end %}
+    </div>
+    {% if more %}
+    <div class="data-more">点击加载更多</div>
+    {% end %}
+<input type='hidden' name="page" value="{{ pinfo['this_page'] }}" />
+<input type='hidden' name="all_page" value="{{ pinfo['all_page'] }}" />
+<input type='hidden' name="st" value="{{ st }}" />
+</section>
+{% end %}
+ 
+{% block footer %}
+    <script>
+        $(document).ready(function(){
+            $('.data-date').find('a').click(function(){
+                $('.data-date').find('a').removeClass('active');
+                $(this).addClass('active');
+            })
+
+            $('.data-more').click(
+                function(){
+                    _this = $(this)
+                    page = $('input[name=page]').val();
+                    all_page = $('input[name=all_page]').val();
+                    st = $('input[name=st]').val();
+                    if( page >= all_page ){
+                        $(this).css('display','none');
+                    }else{
+                        next = parseInt(page) + 1;
+                        $.ajax({
+                           type: "POST",
+                           url: "/more_charge",
+                           data: "page="+next+'&st='+st+'&_xsrf='+getCookie("_xsrf"),
+                           success: function(msg){
+                              if ( msg ){
+                                 res = eval('(' + msg + ')');
+                                 for( var i in res ){
+                                    $('.data-list').append(
+                                        '<div class="list"> <div class="title"> <div class="date">'+formatDate(res[i].creatime)+'</div> <div class="price">电价：<big>'+res[i].price.toFixed(1)+'</big>RMB/KWH </div> </div> <div class="text"> <div class="left"> <p class="address">'+res[i].name+'</p> <p class="num">充电桩：<big>'+res[i].code+'</big></p> </div> <div class="right"> <p class="power">'+res[i].electricity+'<small>KWH</small><span>/</span>'+res[i].pay.toFixed(1)+'<small>RMB</small></p>  <p class="money">余额:<big>'+res[i].last.toFixed(1)+'</big></p> </div> </div> </div>'
+                                    )
+                                 }
+                                 if (next >= all_page){
+                                    _this.css('display','none');
+                                }
+                              }else{
+                                 alert('载入失败');
+                              }
+                           }
+                        });
+                    }
+                    
+                }
+            )
+        }) 
+
+
+        function formatDate(nowtime){     
+            var   now = new Date( nowtime * 1000 );
+            var   year=now.getFullYear();
+            var   month=(now.getMonth()+1 < 10 ? '0'+(now.getMonth()+1) : now.getMonth()+1) + '-';
+            var   day=(now.getDate() < 10 ? '0'+(now.getDate()) : now.getDate());
+            var   hour=now.getHours();
+            var   minute=now.getMinutes();
+            var   second=now.getSeconds();
+            return  year+"-"+month+"-"+day;
+        }  
+
+        function getCookie(name) {
+            var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+            return r ? r[1] : undefined;
+        }
+    </script>
+{% end %}

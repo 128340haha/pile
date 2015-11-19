@@ -1,0 +1,196 @@
+{% extends "frame.html" %}
+
+{% block title %}站点设置{% end %}
+
+{% block javascript %}
+<script type="text/javascript" src="{{ static_url("admin/plugins/elrte/js/elrte.min.js") }}"></script>
+<script type="text/javascript" src="{{ static_url("admin/plugins/elfinder/js/elfinder.min.js") }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/elrte/css/elrte.full.css") }}" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ static_url("admin/plugins/elfinder/css/elfinder.css") }}" media="screen" />
+<script type="text/javascript" src="{{ static_url("admin/js/demo.formelements.js") }}"></script>
+<script type="text/javascript">
+function param_submit( model ){
+    var id = $('#user_id').val()
+    param = "id="+id+'&model='+model
+    if( model == 1 ){
+        var nickname = $('input[name=nickname]').val()
+        if (nickname.indexOf(" ") >=0){
+            alert("昵称不能带空格");
+            return
+        }
+        if( nickname.length > 15 ){
+            alert("昵称请不要超过15字");
+            return
+        }
+        param += "&nickname="+nickname
+        var mail = $('input[name=mail]').val()
+        var reg = /^\+?[a-z0-9](([-+.]|[_]+)?[a-z0-9]+)*@([a-z0-9]+(\.|\-))+[a-z]{2,6}$/
+        if( !reg.test(mail) ){
+            alert("邮箱格式不对");
+            return
+        }
+        param += "&mail="+mail
+        var phone = $('input[name=phone]').val()
+        var reg = /1[3458]{1}\d{9}$/
+        if( !reg.test(phone) ){
+            alert("手机格式不对");
+            return
+        }
+        param += "&phone="+phone
+        var sex = $('input[name=sex]').val()
+        param += "&sex="+sex
+        var idcard = $('input[name=idcard]').val()
+        var reg = /^(^\d{14}(X|x)|\d{15}$|^\d{18}$|^\d{17}(X|x))$/
+        if( !reg.test(idcard) ){
+            alert("身份证格式不对");
+            return
+        }
+        param += "&idcard="+idcard
+    }else if( model == 2 ){
+        var balance = $('input[name=balance]').val()
+        if( balance < 0 ){
+            alert('金额不能小于0');
+            return;
+        }
+        param += "&balance="+balance
+    }
+    param += '&_xsrf='+getCookie("_xsrf")
+    $.ajax({
+       type: "POST",
+       url: "/admin/act_property",
+       data: param,
+       success: function(msg){
+         if( msg == 1 ){   
+            //成功
+            alert('更改成功')
+         }else{
+            alert('更改失败')
+            $('form[name=form'+model+']')[0].reset()
+         }
+       }
+    }); 
+
+    function getCookie(name) {
+        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+        return r ? r[1] : undefined;
+    }
+}
+</script>
+{% end %}
+
+{% block body %}
+{% raw xsrf_form_html() %}
+<div class="container">
+    <div class="mws-panel grid_4">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-pencil">用户信息</span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" name="form1" action="#">
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+                        <label>用户昵称</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="nickname" value="{{ info['nickname'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    
+                    <div class="mws-form-row">
+                        <label>邮箱</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="mail" value="{{ info['mail'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    
+                    <div class="mws-form-row">
+                        <label>电话</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="phone" value="{{ info['phone'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    
+                    <div class="mws-form-row">
+                        <label>性别</label>
+                        <div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input type="radio" name="sex" value="1" {% if info['sex'] == 1 %}checked{% end %} /> <label>男</label></li>
+                                <li><input type="radio" name="sex" value="2" {% if info['sex'] == 2 %}checked{% end %} /> <label>女</label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mws-form-row">
+                        <label>身份证</label>
+                        <div class="mws-form-item large">
+                            <input type="text" class="mws-textinput" name="idcard" value="{{ info['idcard'] }}" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label></label>
+                        <input type="button" onclick="param_submit(1)" value="提交" class="mws-button orange">&nbsp;&nbsp;&nbsp;
+                        <input type="reset" value="重置" class="mws-button black">
+                    </div>
+                </div>
+            </form>
+        </div>      
+    </div>
+    <input  type="hidden" id="user_id" value="{{ info['id'] }}">
+    <div class="mws-panel grid_4">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-eyedropper">附加信息<input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" name="form2" action="#">
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+                        <label>卡号</label>
+                        <div class="mws-form-item large">
+                            <input type="text" value="{{ '%04d%08d'%(card['cardtype'],card['cardid']) }}" class="mws-textinput" disabled />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>识别码</label>
+                        <div class="mws-form-item large">
+                            <input type="text" value="{{ card['cardno'] }}" class="mws-textinput" disabled />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>是否绑定微信</label>
+                        <div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input type="radio" {% if card['wechat'] %}checked{% end %} disabled /> <label>是</label></li>
+                                <li><input type="radio" {% if not card['wechat'] %}checked{% end %} disabled /> <label>否</label></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>累计消费</label>
+                        <div class="mws-form-item large">
+                            <input type="text" value="{{ purse['payed'] }}" class="mws-textinput" disabled />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>余额</label>
+                        <div class="mws-form-item">
+                            <input type="text" id="s1" name="balance" class="mws-textinput" value="{{ purse['balance'] }}" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label></label>
+                        <input type="button" onclick="param_submit(2)" value="修改" class="mws-button orange">&nbsp;&nbsp;&nbsp;
+                        <input type="button" onclick="javascirpt:window.location='/admin/recharge_list?id={{ info['id'] }}'" value="充电记录" class="mws-button blue">&nbsp;&nbsp;&nbsp;
+                        <input type="button" href="javascirpt:window.location='/admin/deposit_list?id={{ info['id'] }}'" value="充值记录" class="mws-button blue">
+                    </div>
+                </div>
+            </form>
+        </div>      
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

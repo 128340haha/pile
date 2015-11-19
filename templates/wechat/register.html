@@ -1,0 +1,159 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block header %}
+	<span class="back"><a href="/login"><i class="fa fa-chevron-left"></i>登陆绑定</a></span>
+    <span class="title">注册</span>
+{% end %}
+
+{% block body %}
+<form method="post" id="form1" name="form1" action="/act_reg" >
+{% raw xsrf_form_html() %}
+<section id="register">
+    <div class="register-input">
+    	<div class="r-list">
+        	<span><img src="{{ static_url("wechat/images/register-username.png") }}"/	></span>
+        	<input type="text"  placeholder="用户名" id="username" name="username" />
+            <div class="popover bottom">
+                <div class="arrow"></div>
+                <div class="popover-content"></div>
+            </div>
+        </div>
+        
+        <div class="r-list">
+       	    <span><img src="{{ static_url("wechat/images/register-password.png") }}"/></span>
+        	<input type="password"  placeholder="密码" id="password" name="password" />
+            <div class="popover bottom">
+                <div class="arrow"></div>
+                <div class="popover-content"></div>
+            </div>
+        </div>
+        <div class="r-list">
+       	    <span><img src="{{ static_url("wechat/images/register-verify.png") }}"/></span>
+        	<input type="password"  placeholder="确认密码" id="ckpass" name="ckpass" />
+            <div class="popover bottom">
+                <div class="arrow"></div>
+                <div class="popover-content"></div>
+            </div>
+        </div>
+    </div>
+    <div class="register-btn">
+    	<a href="javascript:;" id="submit-button">注册</a>
+    </div>
+</section> 
+
+<div class="verify">
+    <div class="verify-head">
+        <a id="exit" href="javascript:;">
+            <i class="fa fa-times"></i>
+        </a>
+        登陆验证 
+    </div>
+</div>
+<div class="layer"></div>
+</form> 
+{% end %}
+ 
+{% block footer %}
+<script>
+$(document).ready(function(){
+	
+	popup = $(".verify")[0];
+    var width = document.body.getBoundingClientRect().width * 0.9;
+    var s = document.createElement("script");
+    s.src = '{% raw url %}'+"&width=" + parseInt(width);
+    s.async = true;
+    popup.appendChild(s);
+    $('#submit-button').click(function () {
+		
+ 		if($('#username').val()==''){
+			
+			$('#username').siblings('.popover').find('.popover-content').text('用户名不能为空');
+ 			$('#username').siblings('.popover').fadeIn();
+			
+			return false;
+					
+		}
+
+		if( $('#username').val().length < 4 || $('#username').val().length > 30 ){
+			$('#username').siblings('.popover').find('.popover-content').text('用户名的长度在4-30之间');
+ 			$('#username').siblings('.popover').fadeIn();
+
+			return false;
+		}
+
+		if (escape($('#username').val()).indexOf("%u") >= 0) { 
+
+			$('#username').siblings('.popover').find('.popover-content').text('用户名不能出现中文');
+ 			$('#username').siblings('.popover').fadeIn();
+
+			return false;
+		} 
+
+			
+ 		if($('#password').val()==''){
+			
+			$('#password').siblings('.popover').find('.popover-content').text('密码不能为空');
+ 			$('#password').siblings('.popover').fadeIn();
+			
+			return false;
+					
+		}
+
+		if( $('#password').val().length < 6 || $('#password').val().length > 30 ){
+			$('#password').siblings('.popover').find('.popover-content').text('密码的长度在6-30之间');
+ 			$('#password').siblings('.popover').fadeIn();
+
+			return false;
+		}
+		
+		if( $('#ckpass').val() != $('#password').val() ){
+			
+			$('#ckpass').siblings('.popover').find('.popover-content').text('两次密码不一致');
+ 			$('#ckpass').siblings('.popover').fadeIn();
+			
+			return false;
+					
+		}
+
+		$('.verify').addClass('show');
+	    $('.layer').addClass('show'); 
+		 
+ 
+    });
+    
+    $('#exit').click(function() {
+      $('.verify').removeClass('show');
+	  $('.layer').removeClass('show');
+    })
+ 
+	$('#username').focus(function(){
+		
+		$('#username').siblings('.popover').fadeOut();
+		
+	})
+	
+	$('#password').focus(function(){
+		
+		$('#password').siblings('.popover').fadeOut();
+		
+	})
+	
+	$('#ckpass').focus(function(){
+		
+		$('#ckpass').siblings('.popover').fadeOut();
+		
+	})
+	
+});
+
+window.gt_custom_ajax = function (r) {
+    if (r) {
+    	$('.verify').removeClass('show');
+		$('.layer').removeClass('show');
+		$('#form1').submit();
+    }
+}
+</script>
+{% end %}

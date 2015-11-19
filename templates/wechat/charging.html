@@ -1,0 +1,193 @@
+{% extends "main.html" %}
+
+{% block header %}
+    <span class="back"><a href="/recharge"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充电ing</span>
+{% end %}
+ 
+{% block body %}
+{% raw xsrf_form_html() %}
+{% import time %}
+<section id="charging">
+	 <div class="charging-title">
+     	  <span><i class="fa fa-check-circle"></i><span id="title">正在充电...</span></span>
+     </div>
+     <div class="charging-content">
+     	<div class="c-list">
+        	开始时间：<span>{{ time.strftime("%Y-%m-%d", time.localtime(thistime)) }}</span> 
+        </div>
+        {% if choose == 'minute' %}
+        <div class="c-list">
+            充电时间：<span class="big">{{ value }}</span><small>min</small>
+        </div>
+        {% elif choose == 'payment' %}
+        <div class="c-list">
+        	充电金额：<span class="big">{{ value }}</span><small>RMB</small>
+        </div>
+        {% elif choose == 'electric' %}
+        <div class="c-list">
+        	充电电量：<span class="big">{{ value }}</span><small>kWh</small>
+        </div>
+        {% end %}
+        <!--
+        <div class="c-title">
+            实时数据
+        </div>
+        <div class="c-list">
+            已充电：<span class="big" id="ctime">0</span><small>min</small>
+        </div>
+        <div class="c-list">
+            冻结金额：<span class="big" id="cmoney">0</span><small>RMB</small>
+        </div>
+        <div class="c-list">
+            已充电量：<span class="big" id="cpower">0</span><small>kWh</small>
+        </div>
+        -->
+     </div>
+     <div class="charging-btn" id="stop">
+     	<a href="javascript:stopcharging()">停止充电</a>
+     </div>
+     <br>
+     <div class="charging-btn">
+        <a href="/wechat">点我回首页</a>
+     </div>
+     <!--
+     <input type="text" name="message" value="Hello World!"/>
+     <input type="button" value="Send Web Socket Data" onclick="send()" />
+     <textarea id="responseText" style="width:500px;height:300px;"></textarea> 
+     -->
+</section>
+{% end %}
+
+{% block footer %}
+<script>
+    code = '{{ code }}';
+    $(document).ready(function(){
+    /*    
+        setTimeout(function() {
+            charging();
+        }, 5000);
+    */    
+    });
+
+    function stopcharging(){
+        if( confirm('您确定要停止充电么？') ){
+            $.ajax({
+               type: "POST",
+               url: "/stop_charge",
+               dataType: "json",
+               data: "code="+code+'&_xsrf='+getCookie("_xsrf"),
+               success: function(msg){
+                  if(msg == 1){
+                    alert('操作成功');
+                    $('#stop').css('display','none')
+                    $('#title').html('充电已经完成')
+                  }else if( msg== 0 ){
+                    alert('设备离线');
+                  }else if( msg == 2 ){
+                    alert('充电已经完成');
+                    $('#stop').css('display','none')
+                    $('#title').html('充电已经完成')
+                  }else if( msg == 3 ){
+                    alert('电桩未在工作中,操作失败');
+                  }else if( msg == 4 ){
+                    alert('访问超时,请稍后再试');
+                  }else if( msg == 5 ){
+                    alert('电桩地址获取失败');
+                  }
+
+               }
+            });
+        }
+    }
+
+    function charging(){
+        $('.charge-btn').attr('disabled','disabled')
+        setTimeout(function() {
+            $('.charge-btn').attr('disabled',false)
+        }, 2000);
+        $.ajax({
+           type: "POST",
+           url: "/charg_socket",
+           dataType: "json",
+           data: "code="+code+'&_xsrf='+getCookie("_xsrf"),
+           success: function(msg){
+              if(msg){
+                 $('#ctime').text(msg.acttime);
+                 $('#cmoney').text(msg.pay);
+                 $('#cpower').text(msg.elec);
+              }
+           }
+        });
+    }
+    /*
+    var socket; 
+     
+    if (!window.WebSocket) { 
+     
+        window.WebSocket = window.MozWebSocket; 
+     
+    } 
+     
+    // Javascript Websocket Client 
+     
+    if (window.WebSocket) { 
+     
+        socket = new WebSocket("ws://192.168.48.129:8000/charg_socket"); 
+     
+        socket.onmessage = function(event) { 
+     
+            var ta = document.getElementById('responseText'); 
+     
+            ta.value = ta.value + '\n' + event.data 
+     
+        }; 
+     
+        socket.onopen = function(event) { 
+     
+            var ta = document.getElementById('responseText'); 
+     
+            ta.value = "Web Socket opened!"; 
+     
+        }; 
+     
+        socket.onclose = function(event) { 
+     
+            var ta = document.getElementById('responseText'); 
+     
+            ta.value = ta.value + "Web Socket closed"; 
+     
+        }; 
+     
+    } else { 
+     
+        alert("Your browser does not support Web Socket."); 
+     
+    } 
+     
+    // Send Websocket data 
+     
+    function send() { 
+     
+        if (!window.WebSocket) { return; } 
+     
+        if (socket.readyState == WebSocket.OPEN) { 
+        
+            var message = $('input[name=message]').val()
+
+            socket.send(message); 
+     
+        } else { 
+     
+            alert("The socket is not open."); 
+     
+        } 
+     
+    } 
+    */
+    function getCookie(name) {
+        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+        return r ? r[1] : undefined;
+    }
+</script>
+{% end %}

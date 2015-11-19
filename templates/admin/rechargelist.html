@@ -1,0 +1,119 @@
+{% extends "frame.html" %}
+
+{% block title %}充电列表{% end %}
+
+{% block javascript %}
+<script>
+
+//删除记录
+function del(id){
+    if( confirm('您确定要删除当前充电记录？') ){
+        window.location = '/admin/recharge_delete?id='+id
+    }
+}
+
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">充电列表</span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">
+                <div class="dataTables_filter">
+                    <form name="form1" id="form1" method="get" action="#" >
+                        <label>开始时间: <input name="start" class="mws-textinput mws-datepicker-btn-limit" id="start" type="text" value="{{ search['start'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <label>结束时间: <input name="end" class="mws-textinput mws-datepicker-btn-limit" id="end" type="text" value="{{ search['end'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <input type="submit" class="mws-button black small" value="搜索" >
+                        <input type="hidden" name="id" value="{{ id }}">
+                    </form>
+                </div>
+            
+            <table class="mws-table">
+                <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>设备码</th>
+                        <th>创建时间</th>
+                        <th>付款(元)</th>
+                        <th>电量(kWh)</th>
+                        <th>耗时(分)</th>
+                        <th>状态</th>
+                        <th>相关操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if clist %}
+                    {% raw xsrf_form_html() %}
+                    {% import time %}
+                    {% for lt in clist %}
+                    <tr class="gradeA">
+                        <td>{{ lt['oid'] }}</td> 
+                        <td>{{ lt['code'] }}</td>
+                        <td>{{ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lt['creatime'])) }}</td>
+                        <td>{{ lt['pay'] }}</td>
+                        <td>{{ lt['electricity'] }}</td>
+                        <td>
+                            {% if lt['acttime'] > 60 %}
+                                {{ int( lt['acttime'] / 60 ) }}时{{ lt['acttime'] % 60 }}分
+                            {% else %}
+                                {{ lt['acttime'] }}分
+                            {% end %}
+                        </td>
+                        
+                        <td>
+                            {% if lt['finish'] == 0 %}
+                                充电中
+                            {% elif lt['finish'] == 1 %}
+                                已结算
+                            {% elif lt['finish'] == 2 %}
+                                异常结束
+                            {% end %}
+                        </td>
+                        <td>
+                            <a href="javascript:void(del('{{ lt['oid'] }}'))"><img title="删除记录" alt="删除记录" src="{{ static_url("admin/css/icons/16/cross.png") }}"></a>
+                        </td>
+                    </tr>
+                    {% end %}
+                    {% else %}
+                    <tr class="gradeX">
+                        <td colspan="8">没有找到您要查找的用户</td>
+                    </tr>
+                    {% end %}
+                </tbody>
+            </table>
+            {% if page_bar %}
+                <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                <div class="dataTables_paginate paging_full_numbers">
+                    {% if page_bar['left_bar'] %}
+                    <span class="first paginate_button">首页</span>
+                    <span class="previous paginate_button">上一页</span>
+                    {% end %}
+                    <span>
+                        {% for l in page_bar['left_bar'] %}
+                        <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                        {% end %}
+                        <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                        {% for r in page_bar['right_bar'] %}
+                        <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                        {% end %}     
+                    </span>
+                    {% if page_bar['right_bar'] %}
+                    <span class="next paginate_button">下一页</span>
+                    <span class="last paginate_button">末页</span>
+                    {% end %}
+               </div>
+            {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

@@ -1,0 +1,78 @@
+{% extends "frame.html" %}
+
+{% block title %}电桩信息{% end %}
+
+{% block javascript %}
+<script type="text/javascript">
+function check_param(){
+    var code = $('input[name=code]').val();
+    var name = $('input[name=name]').val();
+    if ( code == '' ) {
+        alert('电桩设备码不能为空');
+        return false;
+    }
+    if ( name == '' ) {
+        alert('设备名不能为空');
+        return false;
+    }
+
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-eyedropper">电桩信息<input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" name="form2" method="post" onsubmit="return check_param()" action="/admin/act_device">
+                {% raw xsrf_form_html() %}
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+                        <label>电桩设备码</label>
+                        <div class="mws-form-item large">
+                            <input type="text" value="{{ info['code'] }}" name="code" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>电桩设备名称</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="name" value="{{ info['name'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>GPS地址</label>
+                        <div class="mws-form-item">
+                            <input type="text" style="width:120px;" name="latitude" value="{{ info['latitude'] }}" class="mws-textinput" />&nbsp;&nbsp;&nbsp;
+                            <input type="text" style="width:120px;" name="longitude" value="{{ info['longitude'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>异常提醒</label>
+                        <div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input type="radio" name="isopen" value="1" {% if info['isopen'] == 1 %}checked{% end %} /> <label>开启</label></li>
+                                <li><input type="radio" name="isopen" value="0" {% if info['isopen'] == 0 %}checked{% end %} /> <label>关闭</label></li>
+                            </ul>
+                        </div>
+                    </div>  
+                    <div class="mws-form-row">
+                        <label></label>
+                        <input type="submit" value="提交" class="mws-button orange">&nbsp;&nbsp;&nbsp;
+                        <input type="reset" value="重置" class="mws-button black">
+                    </div>
+                </div>
+                <input type="hidden" value="{{ info['id'] }}" class="mws-textinput" name="id" />
+                <input type="hidden" name="act" value="{{ act }}" >
+                <input type="hidden" name="referer" value="{{ referer }}" >
+            </form>
+        </div>      
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

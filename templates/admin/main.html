@@ -1,0 +1,165 @@
+{% extends "frame.html" %}
+
+{% block title %}电桩管理{% end %}
+
+{% block body %}
+
+	<!-- Themer 右下自动变化器 -->  
+	<div id="mws-themer">
+    	<div id="mws-themer-hide"></div>
+        <div id="mws-themer-content">
+        	<div class="mws-themer-section">
+	        	<label for="mws-theme-presets">Presets</label> <select id="mws-theme-presets"></select>
+            </div>
+            <div class="mws-themer-separator"></div>
+            <div class="mws-themer-section">
+                <ul>
+                    <li><span>Base Color</span> <div id="mws-base-cp" class="mws-cp-trigger"></div></li>
+                    <li><span>Text Color</span> <div id="mws-text-cp" class="mws-cp-trigger"></div></li>
+                    <li><span>Text Glow Color</span> <div id="mws-textglow-cp" class="mws-cp-trigger"></div></li>
+                </ul>
+            </div>
+            <div class="mws-themer-separator"></div>
+            <div class="mws-themer-section">
+            	<ul>
+                    <li><span>Text Glow Opacity</span> <div id="mws-textglow-op"></div></li>
+                </ul>
+            </div>
+            <div class="mws-themer-separator"></div>
+            <div class="mws-themer-section">
+	            <button class="mws-button red small" id="mws-themer-getcss">Get CSS</button>
+            </div>
+        </div>
+        <div id="mws-themer-css-dialog">
+        	<div class="mws-form">
+            	<div class="mws-form-row" style="padding:0;">
+		        	<div class="mws-form-item">
+                    	<textarea cols="auto" rows="auto" readonly="readonly"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Themer End -->
+    
+
+	<!-- Header Wrapper -->
+	<div id="mws-header" class="clearfix">
+    
+    	<!-- Logo Wrapper 左上logo -->
+    	<div id="mws-logo-container">
+        	<div id="mws-logo-wrap">
+            	<img src="{{ static_url("admin/images/mws-logo.png") }}" alt="mws admin" />
+			</div>
+        </div>
+        
+        <!-- User Area Wrapper -->
+        <div id="mws-user-tools" class="clearfix">
+        
+        	<!-- User Notifications 右上感叹号通知(用来做提醒) -->
+            {% if dlist %}
+        	<div id="mws-user-notif" class="mws-dropdown-menu">
+            	<a href="#" class="mws-i-24 i-alert-2 mws-dropdown-trigger">Notifications</a>
+                <span class="mws-dropdown-notif">{{left['error']}}</span>
+                <div class="mws-dropdown-box">
+                	<div class="mws-dropdown-content">
+                        <ul class="mws-notifications">
+                            <!-- Notification Content -->
+                            {% for lt in dlist %}
+                        	<li class="read">
+                            	<a href="#">
+                                    <span class="message">
+                                        {{lt['name']}}的电桩发现异常
+                                    </span>
+                                    <span class="time">
+                                        {{lt['code']}}
+                                    </span>
+                                </a>
+                            </li>
+                            {% end %}
+                            <!-- End Notification Content -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% end %}
+
+            <!-- User Functions 右上用户登录信息 -->
+            {% module admin_head( handler ) %}
+            <!-- End User Functions -->
+            
+        </div>
+    </div>
+    
+    <!-- Main Wrapper -->
+    <div id="mws-wrapper">
+    	<!-- Necessary markup, do not remove -->
+		<div id="mws-sidebar-stitch"></div>
+		<div id="mws-sidebar-bg"></div>
+        
+        <!-- Sidebar Wrapper -->
+        <div id="mws-sidebar">
+            
+            <!-- Main Navigation 左边导航列表 -->
+            <div id="mws-navigation">
+            	<ul>
+                	<li class="active"><a href="/admin/welcome" target="myframe" class="mws-i-24 i-home">主页</a></li>
+                	<li>
+                		<a href="#" class="mws-i-24 i-single-user">用户管理</a>
+                		<ul>
+                        	<li><a target="myframe" href="/admin/user_list">用户列表</a></li>
+                        	<li><a target="myframe" href="/admin/add_user">添加用户</a></li>
+                        	<li><a target="myframe" href="/admin/recharging">未结算订单{% if left['error'] > 0 %}<span class="mws-nav-tooltip">{{left['working']}}</span>{% end %}</a></li>
+                            <li><a target="myframe" href="/admin/recycle">回收站</a></li>
+                        </ul>
+                	</li>
+                	<li>
+                		<a href="#" class="mws-i-24 i-creditcard">实体卡管理</a>
+                		<ul>
+	                		<li><a target="myframe" href="/admin/card_list">卡片列表</a></li>
+                		<!--	<li><a target="myframe" href="/admin/new_card">测试新卡</a></li> -->
+                            <li><a target="myframe" href="/admin/card_type">卡片分类</a></li>
+                            <li><a target="myframe" href="/admin/card_seller">售卡站点</a></li>
+	                    </ul>
+                	</li>
+                	<li>
+                		<a href="#" class="mws-i-24 i-electricity-input-plug">电桩管理</a>
+                		<ul>
+	                		<li><a target="myframe" href="/admin/device_list">电桩列表</a></li>
+                			<li><a target="myframe" href="/admin/new_device">添加新电桩</a></li>
+                			<li><a target="myframe" href="/admin/error_device">电桩异常通知{% if left['error'] > 0 %}<span class="mws-nav-tooltip">{{left['error']}}</span>{% end %}</a></li>
+	                    </ul>
+                	</li>
+                	<li>
+                    	<a href="#" class="mws-i-24 i-user">管理员</a>
+                        <ul class="closed">
+                        	<li><a target="myframe" href="/admin/admin_list">管理员列表</a></li>
+                        	<li><a target="myframe" href="/admin/newadmin">添加管理员</a></li>
+                        </ul>
+                    </li>
+                	<li><a href="/admin/setting" target="myframe" class="mws-i-24 i-cog">站点设置</a></li>
+                </ul>
+            </div>
+            <!-- End Navigation -->
+            
+        </div>
+        
+        
+        <!-- Container Wrapper -->
+        <div id="mws-container" class="clearfix">
+       
+	    		<iframe name="myframe" id="myframe" src="/admin/welcome" style="width:100%; height:100%; " frameborder="no" border="0" ></iframe>     
+
+        </div>
+        <!-- End Container Wrapper -->
+        
+    </div>
+    <!-- End Main Wrapper -->
+
+    <script type="text/javascript">
+        $('#mws-navigation').find('a').click(function(){
+            $('#mws-navigation > ul > li').removeClass('active');
+            $(this).parents('#mws-navigation > ul > li').addClass('active');
+        });
+    </script>
+{% end %}

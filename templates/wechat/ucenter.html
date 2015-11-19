@@ -1,0 +1,260 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block header %}
+	<span class="back"><a href="/wechat"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">用户中心</span>
+{% end %}
+
+{% block javascript %}
+    <link href="{{ static_url("wechat/css/sweet-alert.css") }}" rel="stylesheet">
+{% end %}
+
+{% block body %}
+{% raw xsrf_form_html() %}
+<section id="user">
+	<div class="user">
+        <div class="u-img img-responsive">
+        	<span>
+            	<img src="{{ info['headimgurl'] }}"/>
+            </span>
+        </div>
+        <div class="u-txt">
+            <span>{{ info['nickname'] }}</span>
+        </div>
+    </div>
+    <div class="tips">
+    	<p class="txt">账户余额</p>
+        <p class="num"><i class="fa fa-jpy"></i><span id="balance">{{info['balance']}}</span></p>
+    </div>
+    <div class="menu">
+        <a href="/recharge_list" class="m-list">
+            <span><img src="{{ static_url("wechat/images/charge-record.png") }}"/></span>
+            <p>充电记录</p>
+            <i class="fa fa-angle-right"></i>
+        </a>
+        <a href="/deposit_list" class="m-list">
+            <span><img src="{{ static_url("wechat/images/money-record.png") }}"/></span>
+            <p>充值记录</p>
+            <i class="fa fa-angle-right"></i>
+        </a>
+    </div>
+    <div class="tips">
+    	<p class="txt">个人信息</p>
+    </div>
+    <div class="menu">
+        <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/name.png") }}"/></span>
+            <p>
+            	<span class="title">姓名</span>
+                <span class="text"><span data-t="nickname">{{info['nickname']}}</span></span>
+            </p>
+            <div class="set-btn"><img src="{{ static_url("wechat/images/setsmall.png") }}"/></div>
+            <div class="set">
+                <p>
+                    <input type="text" id="nickname" placeholder=""/>
+                </p>
+                <div>
+                    <a class="modify">修改</a>
+                    <a class="backup">取消</a>
+                </div>
+            </div>
+        </div>
+         <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/sex.png") }}"/></span>
+            <p>
+            	<span class="title">性别</span>
+                <span class="text" data-t="sex">{% if int(info['sex']) == 1 %}男{% elif int(info['sex']) == 2 %}女{% end %}</span>
+            </p>
+            <div class="set-btn"><img src="{{ static_url("wechat/images/setsmall.png") }}"/></div>
+            <div class="set">
+                <p>
+                 <label>
+            		<input type="radio" name="sex" {% if int(info['sex']) == 1 %}checked{% end %} value="1">
+                    男
+                 </label>
+                 <label>
+                    <input type="radio" name="sex" {% if int(info['sex']) == 2 %}checked{% end %} value="2">
+                    女
+                 </label>
+                </p>
+                <div>
+                    <a class="modify">修改</a>
+                    <a class="backup">取消</a>
+                </div>
+            </div>
+        </div>
+        <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/phone.png") }}"/></span>
+            <p>
+            	<span class="title">手机</span>
+                <span class="text" data-t="phone">{{info['phone']}}</span>
+            </p>
+            <div class="set-btn"><img src="{{ static_url("wechat/images/setsmall.png") }}"/></div>
+            <div class="set">
+                <p>
+            		<input type="text" id="phone" placeholder=""/>
+                </p>
+                <div>
+                    <a class="modify">修改</a>
+                    <a class="backup">取消</a>
+                </div>
+            </div>
+        </div>
+        <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/mail.png") }}"/></span>
+            <p>
+            	<span class="title">邮箱</span>
+                <span class="text" data-t="mail">{{info['mail']}}</span>
+            </p>
+            <div class="set-btn"><img src="{{ static_url("wechat/images/setsmall.png") }}"/></div>
+            <div class="set">
+                <p>
+            		<input type="text" id="mail" placeholder=""/>
+                </p>
+                <div>
+                    <a class="modify">修改</a>
+                    <a class="backup">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% end %}
+ 
+{% block footer %}
+<script src="{{ static_url("wechat/js/sweet-alert.min.js") }}"></script>
+<script>
+function set(obj,callback){
+ 
+    var _this = obj;
+    
+    if($(_this).siblings('.set').find('input').length ==2){
+
+        if($(_this).siblings('.set').find('input').attr('type')=='radio' ){
+ 
+                var o = $(_this).siblings('.set').find('input').eq(0).attr('name');
+                
+                var c = $(_this).siblings('p').find('span[data-t="'+o+'"]').text();;
+                
+                $(_this).siblings('.set').find('input[value="'+c+'"]').prop('checked','check') 
+     
+                $(_this).siblings('.set').addClass('active');
+         
+                $(_this).siblings('.set').find('.modify').click(function(){
+                    
+                    var val = $(_this).siblings('.set').find('input:radio[name="sex"]:checked').val()
+
+                    if ( val == 1 ){
+                        sex = '男';
+                    }else if( val == 2 ){
+                        sex = '女'
+                    }
+
+                    $(_this).siblings('p').find('span[data-t="'+o+'"]').text( sex )
+
+                    $(_this).siblings('.set').removeClass('active');
+                    
+                    $(_this).siblings('.set').find('.modify').unbind();
+                    
+                    callback({id: o ,val: $(_this).siblings('.set').find('input:radio[name="sex"]:checked').val()});
+         
+                })
+ 
+        }
+        
+    }else{
+    
+        var o = $(_this).siblings('.set').find('input').attr('id');
+     
+        $(_this).siblings('.set').find('#'+o).attr('placeholder',$(_this).siblings('p').find('span[data-t="'+o+'"]').text());
+        
+        $(_this).siblings('.set').addClass('active');
+        
+        
+        $(_this).siblings('.set').find('.modify').click(function(){
+            
+            if($(_this).siblings('.set').find('#'+o).val()!=''){
+                
+                $(_this).siblings('p').find('span[data-t="'+o+'"]').text($(_this).siblings('.set').find('#'+o).val());  
+                
+                $(_this).siblings('.set').find('.modify').unbind();
+                
+                callback({id: o ,val: $(_this).siblings('.set').find('#'+o).val()});
+                
+            }
+     
+            $(_this).siblings('.set').removeClass('active');
+     
+        })
+     
+    }
+    
+    $(_this).siblings('.set').find('.backup').click(function(){
+        
+        $(_this).siblings('.set').removeClass('active');
+            
+    })
+}
+ 	
+	 $('#user .menu .m-list .set-btn').click(function(){
+ 
+		set(this,function(data){
+            var key = data.id;
+            var val = data.val;
+            if( key == '' ){
+                swal({ title: "错误",   text: "参数出错,请刷新后再试",   type: "error" });
+                return false
+            }
+            if( key == 'phone' ){
+                var reg = /1[3458]{1}\d{9}$/
+                if( !reg.test(val) ){
+                    swal({ title: "错误",   text: "手机格式不对",   type: "error" });
+                    $('span[data-t="'+key+'"]').css('color','red')
+                    return
+                }
+            }else if( key == 'mail' ){
+                var reg = /^\+?[a-z0-9](([-+.]|[_]+)?[a-z0-9]+)*@([a-z0-9]+(\.|\-))+[a-z]{2,6}$/
+                if( !reg.test(val) ){
+                    swal({ title: "错误",   text: "邮箱格式不对",   type: "error" });
+                    $('span[data-t="'+key+'"]').css('color','red')
+                    return
+                }
+            }else if( key == 'nickname' ){
+                if (val.indexOf(" ") >=0){
+                    swal({ title: "错误",   text: "昵称不能带空格",   type: "error" });
+                    return
+                }
+                if( val.length > 15 ){
+                    swal({ title: "错误",   text: "昵称请不要超过15字",   type: "error" });
+                    return
+                }
+            }
+
+			$.ajax({
+               type: "POST",
+               url: "/act_info",
+               data: "key="+key+"&val="+val+'&_xsrf='+getCookie("_xsrf"),
+               success: function(msg){
+                 if( msg == 1 ){   
+                    //成功
+                    $('span[data-t="'+key+'"]').css('color','')
+                 }else{
+                    swal({ title: "错误",   text: msg,   type: "error" });
+                    $('span[data-t="'+key+'"]').css('color','red')
+                 }
+               }
+            });	
+			
+		});
+		
+	})
+
+    function getCookie(name) {
+        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+        return r ? r[1] : undefined;
+    }
+	 
+</script>
+{% end %}

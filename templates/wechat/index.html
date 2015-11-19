@@ -1,0 +1,78 @@
+{% extends "main.html" %}
+
+{% block title %}首页{% end %}
+
+{% block header %}
+	{% if not info['bind'] %}
+    <span class="back"><a href="/login"><i class="fa fa-chevron-left"></i>登录绑定</a></span>
+    <span class="title"><img src="{{ static_url("wechat/images/logo.png") }}"/></span>
+    <span class="register">
+    	<a href="javascript:void(one_bind())">一键绑定</a>
+    </span>
+    {% else %}
+    <!--
+    <span class="register">
+    	<a href="javascript:void(cancel())">取消绑定</a>
+    </span>
+    -->
+    {% end %}
+{% end %}
+
+{% block javascript %}
+    <link href="{{ static_url("wechat/css/sweet-alert.css") }}" rel="stylesheet">
+    <script>
+        function cancel(){
+            if ( confirm( '您确定要取消当前账号绑定吗？' ) ){
+                window.location = '/act_cancel'
+            }
+        }
+
+        function one_bind(){
+            if( confirm( '您确定要一键绑定吗？' ) ){
+                window.location = '/act_onebind'
+            }
+        }
+    </script>
+{% end %}
+
+{% block body %}
+	<section id="main">
+    <div class="user">
+        <div class="u-img img-responsive">
+            <img src="{{ info['headimgurl'] }}"/>
+        </div>
+        <div class="u-txt">
+            <p><i class="fa fa-weixin"></i><span id="username">{% if info['nickname'] %}{{ info['nickname'] }}{% else %}{{ info['username'] }}{% end %}</span></p>
+            <p><i class="fa fa-jpy"></i>余额：<span id="balance">{{info['balance']}}</span>元</p>
+            <p><i class="fa fa-credit-card"></i>卡号：<span id="cardnum">{{ '%04d%08d'%(card['cardtype'],card['cardid']) }}</span></p>
+        </div>
+    </div>
+    <div class="menu">
+        <a href="{% if info['bind'] %}/ucenter{% else %}javascript:void(login_notice());{% end %}" class="m-list">
+            <span><img src="{{ static_url("wechat/images/user.png") }}"/></span>
+            <p>个人中心</p>
+        </a>
+        <a href="{% if info['bind'] %}/recharge{% else %}javascript:void(login_notice());{% end %}" class="m-list">
+            <span><img src="{{ static_url("wechat/images/charge.png") }}"/></span>
+            <p>充电</p>
+        </a>
+        <a href="{% if info['bind'] %}/deposit{% else %}javascript:void(login_notice());{% end %}" class="m-list">
+            <span><img src="{{ static_url("wechat/images/money.png") }}"/></span>
+            <p>充值</p>
+        </a>
+        <a href="{% if info['bind'] %}/map{% else %}javascript:void(login_notice());{% end %}" class="m-list">
+            <span><img src="{{ static_url("wechat/images/navigate.png") }}"/></span>
+            <p>导航</p>
+        </a>
+    </div>
+</section> 
+{% end %}
+
+{% block footer %} 
+<script src="{{ static_url("wechat/js/sweet-alert.min.js") }}"></script>
+<script>
+    function login_notice(){
+        swal({ title: "提示",   text: "请先绑定您的账号",   type: "error" });
+    }
+</script>
+{% end %}

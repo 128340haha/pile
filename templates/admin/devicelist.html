@@ -1,0 +1,151 @@
+{% extends "frame.html" %}
+
+{% block title %}电桩列表{% end %}
+
+{% block javascript %}
+<script>
+
+//删除管理员
+function del(id){
+    if( confirm('您确定要删除该电桩？') ){
+        window.location = '/admin/delete_device?id='+id
+    }
+}
+
+function change_status(id){
+	var img = $('#'+id)
+    if( img.attr('val') == 1 ){
+        var val = 0;
+    }else{
+        var val = 1;
+    }
+    $.ajax({
+        type: "POST",
+        url: "/admin/open_device",
+        data: "val="+val+'&id='+id+'&_xsrf='+getCookie("_xsrf"),
+        success: function(msg){
+            if( msg == '1' ){
+                if( val == 1 ){
+                    img.attr('src','{{ static_url("admin/css/icons/16/accept.png") }}')
+                }else{
+                    img.attr('src','{{ static_url("admin/css/icons/16/cross.png") }}')
+                }
+                img.attr('val',val)
+            }else{
+                alert( msg );
+            }
+        }
+    });
+}
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">电桩列表</span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">
+                <div class="dataTables_filter">
+                    <form name="form1" id="form1" method="get" action="#" >
+                        <label>设备号: <input name="code" type="text" value="{{ search['code'] }}" ></label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label>设备名: <input name="name" type="text" value="{{ search['name'] }}" ></label>
+                        &nbsp;&nbsp;&nbsp;
+                        <label>电桩状态:
+                            <select name='status'>
+                            	<option value="9" {% if search['status']=='9' %}selected{% end %} >全部</option>
+                                <option value="1" {% if search['status']=='1' %}selected{% end %} >空闲</option>
+                                <option value="2" {% if search['status']=='2' %}selected{% end %} >忙碌</option>
+                                <option value="0" {% if search['status']=='0' %}selected{% end %} >离线</option>
+                            </select>
+                        </label>
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="submit" class="mws-button black small" value="搜索" >
+                    </form>
+                </div>
+            
+            <table class="mws-table">
+                <thead>
+                    <tr>
+                        <th>设备号</th>
+                        <th>设备名称</th>
+                        <th>设备状态</th>
+                        <th>GPS</th>
+                        <th>异常提醒</th>
+                        <th>相关操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if dlist %}
+                    {% raw xsrf_form_html() %}
+                    {% import time %}
+                    {% for lt in dlist %}
+                    <tr class="gradeA">
+                        <td>{{ lt['code'] }}</td>
+                        <td>{{ lt['name'] }}</td>
+                        <td>
+                        {% if int(time.time()) - lt['heart_time'] > 120 %}
+                            <span style="color:red;">离线</span>
+                        {% elif lt['status'] == 1 %}
+                            <span style="color:green;">空闲</span>
+                        {% elif lt['status'] == 2 %}
+                            忙碌
+                        {% end %}
+                        </td>
+                        <td>{{ lt['latitude'] }}，{{ lt['longitude'] }}</td>
+                        <td>
+                        	<a href="javascript:void(change_status('{{ lt['id'] }}'))">
+                                <img val="{{ lt['isopen'] }}" id="{{ lt['id'] }}" {% if lt['isopen'] == 1 %}src="{{ static_url("admin/css/icons/16/accept.png") }}"{% else %}src="{{ static_url("admin/css/icons/16/cross.png") }}"{% end %}>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/admin/edit_device?id={{lt['id']}}"><img title="设备信息" alt="设备信息" src="{{ static_url("admin/css/icons/16/edit.png") }}"></a>&nbsp;&nbsp;&nbsp;
+                            <a href="javascript:void(del('{{ lt['id'] }}'))"><img title="删除设备" alt="删除设备" src="{{ static_url("admin/css/icons/16/cross.png") }}"></a>
+                        </td>
+                    </tr>
+                    {% end %}
+                    {% else %}
+                    <tr class="gradeX">
+                        <td colspan="6">没有找到您要查找的信息</td>
+                    </tr>
+                    {% end %}
+                </tbody>
+            </table>
+            {% if page_bar %}
+                <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                <div class="dataTables_paginate paging_full_numbers">
+                    {% if page_bar['left_bar'] %}
+                    <a href="{{ page_bar['sign']['first'] }}"><span class="first paginate_button">首页</span></a>
+                    <a href="{{ page_bar['sign']['prev'] }}"><span class="previous paginate_button">上一页</span></a>
+                    {% end %}
+                    <span>
+                        {% for l in page_bar['left_bar'] %}
+                        <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                        {% end %}
+                        <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                        {% for r in page_bar['right_bar'] %}
+                        <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                        {% end %}     
+                    </span>
+                    {% if page_bar['right_bar'] %}
+                    <a href="{{ page_bar['sign']['next'] }}"><span class="next paginate_button">下一页</span></a>
+                    <a href="{{ page_bar['sign']['last'] }}"><span class="last paginate_button">末页</span></a>
+                    {% end %}
+               </div>
+            {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

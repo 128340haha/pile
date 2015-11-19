@@ -1,0 +1,75 @@
+{% extends "main.html" %}
+
+{% block body %}充值{% end %}
+
+{% block header %}
+	<span class="back"><a href="/wechat"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充值</span>
+{% end %}
+
+{% block body %}
+<form id="form">
+<section id="money">
+    <div class="money-title">输入充值金额</div>
+    
+    <div class="money-input">
+        <input type="text" id="money-number" placeholder="0.0"/>
+        <span>元</span>
+    </div>
+    <div class="money-balance">我的余额：<span>{{balance}}</span>元</div>
+    <div class="money-options">
+        <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/weixin.jpg") }}"/></span>
+            <p>微信支付</p>
+            <p><small>推荐已安装微信的用户使用</small></p>
+            <div class="check active" id="weixin">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+        <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/zhifubao.jpg") }}"/></span>
+            <p>支付宝支付</p>
+            <p><small>推荐支付宝用户使用</small></p>
+            <div class="check" id="zhifubao">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+        <div class="m-list">
+            <span><img src="{{ static_url("wechat/images/yinlian.jpg") }}"/></span>
+            <p>银联支付</p>
+            <p><small>推荐持有银行卡用户使用</small></p>
+            <div class="check" id="yinlian">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+    </div>
+    <div class="money-btn">
+        <a href="#">下一步</a>
+    </div>
+</section>
+</form>
+{% end %}
+ 
+{% block footer %}
+<script>
+$(document).ready(function() {
+ 
+    $('#money .money-options .m-list .check').click(function(){
+		
+		var money = $('#money-number').val();
+		
+		var mode =  $(this).attr('id');
+ 
+		if(!$(this).hasClass('active')){
+			
+			$('#money .money-options .m-list .check').removeClass('active');
+			
+			$(this).addClass('active');
+			
+			console.log(money,mode)
+		} 
+	});
+ 
+});
+</script>
+{% end %}

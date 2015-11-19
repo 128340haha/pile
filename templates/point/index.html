@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html" />
+<!-- 指定以最新的IE版本模式来显示网页 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- 针对360浏览器的内核调用,强制调用极速模式 -->
+<meta name="renderer" content="webkit" />
+<!--[if lt IE 10]>
+<meta name="renderer" content="ie-stand" />
+<![endif]-->
+<!--[if !IE]>
+<meta name="renderer" content="ie-stand" />
+<!<![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>管理系统</title>
+<link href="{{ static_url("point/css/index.css") }}" rel="stylesheet">
+<link href="{{ static_url("point/css/iosOverlay.css") }}" rel="stylesheet">
+</head>
+
+<body>
+{% raw xsrf_form_html() %}
+<div id="webWrap">
+    <div id="webBox">
+        <div id="mainBox">
+            <div class="top">
+                <p class="head">充值卡管理系统</p>
+            </div>
+            <div class="center">
+                <p class="text">
+                    <span>卡号</span>
+                    <input type="text" name="cardid" id="cardid" value="" readonly/>
+                </p>
+                <p class="text">
+                    <span>类型号</span>
+                    <input type="text" name="cardtype" id="cardtype" value="" readonly/>
+                </p>
+                <p class="text">
+                    <span>识别码</span>
+                    <input type="text" name="cardno" id="cardno" value="" readonly/>
+                </p>
+                <p class="text">
+                    <span>账户余额</span>
+                    <input type="text" name="balance" id="balance" value="" readonly/>
+                </p>
+            </div>
+            <div class="bottom">
+                <div class="tabList">
+                    <a class="list active" data-tab="tab1">
+                        开户
+                    </a>
+                    <a class="list" data-tab="tab2">
+                        充值
+                    </a>
+                    <a class="list" data-tab="tab3">
+                        详细信息
+                    </a>
+                    <a class="list" data-tab="tab4">
+                        充值记录
+                    </a>
+                    <a class="list" data-tab="tab5">
+                        消费记录
+                    </a>
+                    <span class="block"></span>
+                </div>
+                <div class="tabBox">
+                    <div class="tab active" id="tab1">
+                        <div class="ttxt">
+                            <p class="input">
+                                <span>姓名</span>
+                                <input type="text" id="reg_nickname"/>
+                            </p>
+                            <p class="input">
+                                <span>手机号</span>
+                                <input type="text" id="reg_phone"/>
+                            </p>
+                            <p class="input">
+                                <span>密码</span>
+                                <input type="text" id="reg_password"/>
+                            </p>
+                            <p class="input">
+                                <span>确认密码</span>
+                                <input type="text" id="reg_ckpass"/>
+                            </p>
+                            <p class="input">
+                                <span>充值金额</span>
+                                <select id="reg_deposit">
+                                    <option value ="100">100元</option>
+                                    <option value ="50">50元</option>
+                                    <option value="30">30元</option>
+                                    <option value="20">20元</option>
+                                </select>
+                            </p>
+                        </div>
+                        <div class="tbtn">
+                            <input type="button" value="注册" id="submit" class="submit"/>
+                        </div>
+                    </div>
+                    <div class="tab" id="tab2">
+                        <div class="ttxt">
+                            <p class="input">
+                                <span>充值金额</span>
+                                <select id="deposit">
+                                    <option value ="100">100元</option>
+                                    <option value ="50">50元</option>
+                                    <option value="30">30元</option>
+                                    <option value="20">20元</option>
+                                </select>
+                            </p>
+                        </div>
+                        <div class="tbtn">
+                            <input type="button" value="充值" id="reload" class="submit"/>
+                        </div>
+                    </div>
+                    <div class="tab" id="tab3">
+                        <div class="ttxt">
+                            <p class="input">
+                                <span>姓名</span>
+                                <input type="text" id="edit_name"/>
+                            </p>
+                            <p class="input">
+                                <span>手机号</span>
+                                <input type="text" id="edit_phone"/>
+                            </p>
+                            <p class="input">
+                                <span>密码</span>
+                                <input type="passwrod" id="edit_password"/>
+                            </p>
+                            <p class="input">
+                                <span>确认密码</span>
+                                <input type="passwrod" id="edit_repassword"/>
+                            </p>
+                        </div>
+                        <div class="tbtn">
+                            <input type="button" value="修改" id="edit" class="submit"/>
+                        </div>
+
+                    </div>
+                    <div class="tab" id="tab4">
+                        <div class="ttxt">
+                            <div class="textbox">
+                                <div class="list title">
+                                    <p class="date">日期</p>
+                                    <p class="address">地址</p>
+                                    <p class="model">充值方式</p>
+                                    <p class="money">充值金额/元</p>
+                                </div>
+                                <div class="listBox" data-page="1">
+                                    <!--
+                                    <div class="list">
+                                        <p class="date">2015-10-15</p>
+                                        <p class="address">深圳南山科技园2栋</p>
+                                        <p class="money">100.0元</p>
+                                    </div>
+                                    -->
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="tbtn">
+                            <input type="button" value="上一页" id="recPrev" class="submit prev"/>
+                            <input type="button" value="打 印" id="recPrint" class="submit"/>
+                            <input type="button" value="下一页" id="recNext" class="submit next"/>
+                        </div>
+                    </div>
+                    <div class="tab" id="tab5">
+                        <div class="ttxt">
+                            <div class="textbox">
+                                <div class="list title">
+                                    <p class="date">日期</p>
+                                    <p class="address">地址</p>
+                                    <p class="model">电量/kWh</p>
+                                    <p class="money">消费金额/元</p>
+                                </div>
+                                <div class="listBox" data-page="1">
+                                    <!--
+                                    <div class="list">
+                                        <p class="date">2015-10-15</p>
+                                        <p class="address">深圳南山科技园2栋</p>
+                                        <p class="money">100.0元</p>
+                                    </div>
+                                    -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tbtn">
+                            <input type="button" value="上一页" id="expPrev" class="submit prev"/>
+                            <input type="button" value="打 印" id="expPrint" class="submit"/>
+                            <input type="button" value="下一页" id="expNext" class="submit next"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="cardinfo" value="">
+<script src="{{ static_url("point/js/jquery-1.11.1.min.js") }}"></script>
+<script src="{{ static_url("point/js/iosOverlay.js") }}"></script>
+<script src="{{ static_url("point/js/spin.min.js") }}"></script>
+<script type="text/javascript">
+var opts = {
+    lines: 13, // The number of lines to draw
+    length: 11, // The length of each line
+    width: 5, // The line thickness
+    radius: 17, // The radius of the inner circle
+    corners: 1, // Corner roundness (0..1)
+    rotate: 0, // The rotation offset
+    color: '#FFF', // #rgb or #rrggbb
+    speed: 1, // Rounds per second
+    trail: 60, // Afterglow percentage
+    shadow: false, // Whether to render a shadow
+    hwaccel: false, // Whether to use hardware acceleration
+    className: 'spinner', // The CSS class to assign to the spinner
+    zIndex: 2e9, // The z-index (defaults to 2000000000)
+    top: 'auto', // Top position relative to parent in px
+    left: 'auto' // Left position relative to parent in px
+};
+            
+//读取卡信息
+function loadInfo(cardid,cardtype,cardno){
+    if( cardid == 0 || cardtype == 0 || cardno == 0 ){
+        return;
+    }
+    $.ajax({
+        type: "GET",
+        cache: false,
+        url: "/point/card",
+        data: "cardid=" + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno,
+        success: function(msg) {
+            if( msg.res == 1 ){
+                $('#edit_name').val(msg.data.nickname);
+                $('#edit_phone').val(msg.data.phone);
+                $('#balance').val(msg.data.balance);
+                if( parseInt( msg.data.user_id ) > 0 ){
+                    //存在，不能注册
+                    $('#cardinfo').val(1);
+                }else if( parseInt( msg.data.user_id ) == 0 ){
+                    //不存在绑定用户,才能注册
+                    $('#cardinfo').val(3);
+                }
+            }else if( msg.res == 2 ){
+                $('#cardinfo').val(2);
+                iosOverlay({
+                    text: "找不到该卡信息",
+                    duration: 2e3,
+                    icon: "{{ static_url('point/images/cross.png') }}"
+                });
+            }else if( msg.res == 0 ){
+                iosOverlay({
+                    text: msg.data,
+                    duration: 2e3,
+                    icon: "{{ static_url('point/images/cross.png') }}"
+                });
+            }
+        }
+    });
+}
+
+//读取卡数据列表
+function loadList(cardid,cardtype,cardno,target,key,page){
+    var priv = $('#cardinfo').val();
+    if( priv != 1 ){
+        return;
+    }
+    if( target == 'recharge' ){
+        url = "/point/recharge_list";
+    }else if( target == 'deposit' ){
+        url = "/point/deposit_list";
+    }
+    $('#'+key+' .listBox').html('');
+
+    $.ajax({
+        type: "GET",
+        cache: false,
+        url: url,
+        data: "cardid=" + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno + '&page='+ page + '&per_page=6',
+        success: function(msg) {
+            res = msg.data;
+            pag = msg.page;
+            if( res ){
+                if( target == 'deposit' ){
+                    for( var i in res ){
+                        if(res[i].model == 'point'){
+                            res[i].model = '线下充值';
+                        }else if(res[i].model == 'alpay'){
+                            res[i].model = '支付宝';
+                        }else if(res[i].model == 'bank'){
+                            res[i].model = '银联';
+                        }
+                        $('#'+key+' .listBox').append('<div class="list"><p class="date">'+getLocalTime(res[i].acttime)+'</p><p class="address">'+res[i].depict+'</p><p class="model">'+res[i].model+'</p><p class="money">'+res[i].increase+'</p></div>')
+                    }
+                }
+                if( target == 'recharge' ){
+                   for( var i in res ){
+                        $('#'+key+' .listBox').append('<div class="list"><p class="date">'+getLocalTime(res[i].creatime)+'</p><p class="address">'+res[i].name+'</p><p class="model">'+res[i].electricity+'</p><p class="money">'+res[i].pay+'</p></div>')
+                    } 
+                }
+            }
+            if( pag ){
+                $('#'+key+' .listBox').attr('data-page',pag.this_page);
+                if( target == 'deposit' ){
+                    if( pag.all_page == 1 ){
+                        $('#recPrev').hide();
+                        $('#recNext').hide();
+                        return;
+                    }else{
+                        $('#recPrev').show();
+                        $('#recPrev').show();
+                    }
+                    if( pag.this_page == 1 ){
+                        $('#recPrev').hide();
+                    }else{
+                        $('#recPrev').show();
+                    }
+                    if( pag.this_page == pag.all_page ){
+                        $('#recNext').hide();
+                    }else{
+                        $('#recNext').show();
+                    }
+
+                }
+                if( target == 'recharge' ){
+                    if( pag.all_page == 1 ){
+                        $('#expPrev').hide();
+                        $('#expNext').hide();
+                        return;
+                    }else{
+                        $('#expPrev').show();
+                        $('#expPrev').show();
+                    }
+                    if( pag.this_page == 1 ){
+                        $('#expPrev').hide();
+                    }else{
+                        $('#expPrev').show();
+                    }
+                    if( pag.this_page == pag.all_page ){
+                        $('#expNext').hide();
+                    }else{
+                        $('#expNext').show();
+                    }
+                }
+            } 
+        }
+    }); 
+}
+
+var cardid = 0;
+var cardtype = 0;
+var cardno = 0;
+
+//读取卡数据
+function fillData(cno,ctype,cid){
+    if( cno == '' || cno <= 0 ){
+        clearCard();
+        return;
+    }
+    if( cid == 0 && ctype == 0 ){
+        //开新卡
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: "/point/blank_card",
+            data: 'cardno=' + cno + '&_xsrf=' + getCookie("_xsrf"),
+            success: function(msg) {
+                if( msg.res == 1 ){
+                    //调用写入函数
+                    //alert( msg.data.cardtype+':'+msg.data.cardid )
+                    window.external.setsome(parseInt(msg.data.cardtype),parseInt(msg.data.cardid)); 
+                    //卡数据写入页面
+                    loadCard( cno,msg.data.cardid,msg.data.cardtype,0 );
+                }else{
+                    iosOverlay({
+                        text: "操作失败,请刷新后再试",
+                        duration: 2e3,
+                        icon: "{{ static_url('point/images/cross.png') }}"
+                    });
+                    return;
+                }
+            }
+        });
+    }else if( cno > 0 && cid > 0 && ctype > 0 ){
+        //卡数据写入页面
+        loadCard( cno,cid,ctype,1 );
+    }
+}
+//读取卡信息存入
+function loadCard( cno,cid,ctype,act ){
+    $('#cardno').val(cno);
+    $('#cardid').val(cid);
+    $('#cardtype').val(ctype);
+    //获取用户信息
+    if( act == 1 ){
+        loadInfo(cid,ctype,cno);  
+    }
+    //当前操作卡号
+    cardno = cno;
+    cardid = cid;
+    cardtype = ctype;
+}
+//卡离开清空页面功能
+function clearCard(){
+    cardno = 0;
+    cardid = 0;
+    cardtype = 0;
+    $('#cardno').val('');
+    $('#cardid').val('');
+    $('#cardtype').val('');
+    $('#cardinfo').val('');
+}
+
+//错误数据提示
+function setsomereturn( res ){
+    var mess = ''
+    switch( res ){
+        case 0:
+            //写入成功
+            loadCard(cardno,cardid,cardtype,1)
+            break;
+        case 1:
+            if( confirm( '写卡失败,是否重试' ) ){
+                window.external.setsome(parseInt(cardtype),parseInt(cardid)); 
+            }
+    }
+}
+
+
+$(document).ready(function() {
+
+    $('.tabList').find('.list').mouseenter(function(){
+        var l = $(this).position().left;
+        $(this).siblings('.block').stop().animate({left:l+'px'},300);
+    })
+    $('.tabList').find('.list').mouseleave(function(){
+        var l = $('.tabList').find('.list.active').position().left;
+        $(this).siblings('.block').stop().animate({left:l+'px'},300);
+    })
+    $('.tabList').find('.list').click(function(){
+        var tl = $(this).attr('data-tab');
+        $('.tabList').find('.list').removeClass('active');
+        $(this).addClass('active');
+        $('.tabBox').find('.tab').each(function() {
+            var tb = $(this).attr('id');
+            $(this).removeClass('active');
+            if(tl == tb){
+                $(this).addClass('active');
+                //点击刷新
+                if( tb == 'tab4' ){
+                    loadList(cardid,cardtype,cardno,'deposit',tb,1)
+                }
+                if( tb == 'tab5' ){
+                    loadList(cardid,cardtype,cardno,'recharge',tb,1)
+                }
+            }
+        });
+    })
+
+    $('#recPrev').click(function(){
+        var page = $(this).parent().siblings('.ttxt').find('.listBox').attr('data-page');
+        loadList(cardid,cardtype,cardno,'deposit','tab4',parseInt(page)-1);
+    })
+    $('#recNext').click(function(){
+        var page = $(this).parent().siblings('.ttxt').find('.listBox').attr('data-page');
+        loadList(cardid,cardtype,cardno,'deposit','tab4',parseInt(page)+1);
+    })
+    $('#expPrev').click(function(){
+        var page = $(this).parent().siblings('.ttxt').find('.listBox').attr('data-page');
+        loadList(cardid,cardtype,cardno,'recharge','tab5',parseInt(page)-1);
+    })
+    $('#expNext').click(function(){
+        var page = $(this).parent().siblings('.ttxt').find('.listBox').attr('data-page');
+        loadList(cardid,cardtype,cardno,'recharge','tab5',parseInt(page)+1);
+    })
+    $('#recPrint').click(function(){
+        var priv = $('#cardinfo').val();
+        //刷卡验证
+        if( priv != 1 ){
+            iosOverlay({
+                text: "未录入或未收录卡片",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return;
+        }
+        var page = $(this).parent().siblings('.ttxt').find('.listBox').attr('data-page');
+        window.open("/point/print?cardid=" + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno + '&page='+ page + '&per_page=6'+ '&target=deposit');
+    })
+    $('#expPrint').click(function(){
+        var priv = $('#cardinfo').val();
+        //刷卡验证
+        if( priv != 1 ){
+            iosOverlay({
+                text: "未录入卡或是未收录卡",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return;
+        }
+        var page = $(this).parent().siblings('.ttxt').find('.listBox').attr('data-page');
+        window.open("/point/print?cardid=" + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno + '&page='+ page + '&per_page=6'+ '&target=recharge');
+    })
+    //开新卡
+    $('#submit').click(function(){
+        //刷卡验证
+        var priv = $('#cardinfo').val();
+        if( priv == '' ){
+            iosOverlay({
+                text: "请先录入需要操作的卡",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return;
+        }else if( priv == 1 ){
+            iosOverlay({
+                text: "您当前的卡已经注册,请勿重复操作",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return;
+        }else if( priv == 2 ){
+            iosOverlay({
+                text: "库中没有当前卡记录,请勿操作",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return;
+        }else if( priv == 3 ){
+            //pass
+        }
+
+        var nickname = $('#reg_nickname').val();
+        var phone = $('#reg_phone').val();
+        var password = $('#reg_password').val();
+        var ckpass = $('#reg_ckpass').val();
+        var deposit = $('#reg_deposit').val();
+        if(password != ckpass){
+            iosOverlay({
+                text: "两次密码不一致",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return false;
+        }
+        if(nickname.length<=0){
+            iosOverlay({
+                text: "请输入姓名",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return false; 
+        } 
+        if(phone.length>0){
+            var reg = /1[34578]{1}\d{9}$/
+            if( !reg.test(phone) ){
+                iosOverlay({
+                    text: "请输入正确的手机号码",
+                    duration: 2e3,
+                    icon: "{{ static_url('point/images/cross.png') }}"
+                });
+                return false;
+            }
+        }else{
+            iosOverlay({
+                text: "请输入正确的手机号码",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return false;
+        }
+
+        var target = document.createElement("div");
+        document.body.appendChild(target);
+        var spinner = new Spinner(opts).spin(target);
+        var overlay = iosOverlay({
+            text: "Loading",
+            spinner: spinner
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: "/point/reg_card",
+            data: 'cardid=' + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno + '&_xsrf=' + getCookie("_xsrf") + '&phone=' + phone + '&nickname=' + nickname + '&password=' + password+'&balance='+deposit,
+            success: function(msg) {
+                if(msg.res == 1){
+                    overlay.update({
+                        icon: "{{ static_url('point/images/check.png') }}",
+                        duration: 2e3,
+                        text: "注册成功"
+                    });
+                    overlay_clear(overlay);
+                    loadInfo(cardid,cardtype,cardno)
+                }else{
+                    overlay.update({
+                        icon: "{{ static_url('point/images/cross.png') }}",
+                        duration: 2e3,
+                        text: msg.data
+                    });
+                    overlay_clear(overlay);
+                }
+            }
+        });
+    })
+
+    //充值
+    $('#reload').click(function(){
+        var target = document.createElement("div");
+        document.body.appendChild(target);
+        var spinner = new Spinner(opts).spin(target);
+        var overlay = iosOverlay({
+            text: "Loading",
+            spinner: spinner
+        });
+
+        var priv = $('#cardinfo').val();
+
+        //刷卡验证
+        if( priv != 1 ){
+            overlay.update({
+                icon: "{{ static_url('point/images/cross.png') }}",
+                duration: 2e3,
+                text: "未录入卡或是未收录卡"
+            });
+            overlay_clear(overlay);
+            return;
+        }
+
+        var deposit = $('#deposit').val();
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: "/point/change_balance",
+            data: 'cardid=' + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno + '&_xsrf=' + getCookie("_xsrf") + '&money=' + deposit,
+            success: function(msg) {
+                if(msg.res == 1){
+                    overlay.update({
+                        icon: "{{ static_url('point/images/check.png') }}",
+                        duration: 2e3,
+                        text: "充值成功"
+                    });
+                    overlay_clear(overlay);
+                    loadInfo(cardid,cardtype,cardno)
+                }else{
+                    overlay.update({
+                        icon: "{{ static_url('point/images/cross.png') }}",
+                        duration: 2e3,
+                        text: "充值失败"
+                    });
+                    overlay_clear(overlay);
+                }
+            }
+        });
+    })
+
+    //修改信息
+    $('#edit').click(function(){
+        var priv = $('#cardinfo').val();
+        //刷卡验证
+        if( priv != 1 ){
+            iosOverlay({
+                text: "未录入卡或是未收录卡",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return;
+        }
+
+        var nickname = $('#edit_name').val();
+        var phone = $('#edit_phone').val();
+        var password = $('#edit_password').val();
+        var repassword = $('#edit_repassword').val();
+
+        if(password != repassword){
+            iosOverlay({
+                text: "两次密码不一致",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return false;
+        }
+        if(nickname.length<=0){
+            iosOverlay({
+                text: "请输入姓名",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return false; 
+        } 
+        if(phone.length>0){
+            var reg = /1[34578]{1}\d{9}$/
+            if( !reg.test(phone) ){
+                iosOverlay({
+                    text: "请输入正确的手机号码",
+                    duration: 2e3,
+                    icon: "{{ static_url('point/images/cross.png') }}"
+                });
+                return false;
+            }
+        }else{
+            iosOverlay({
+                text: "请输入正确的手机号码",
+                duration: 2e3,
+                icon: "{{ static_url('point/images/cross.png') }}"
+            });
+            return false;
+        }
+
+        var target = document.createElement("div");
+        document.body.appendChild(target);
+        var spinner = new Spinner(opts).spin(target);
+        var overlay = iosOverlay({
+            text: "Loading",
+            spinner: spinner
+        });
+
+        $.ajax({
+            type: "POST",
+            cache: false,
+            url: "/point/edit_card",
+            data: 'cardid=' + cardid + '&cardtype=' + cardtype + '&cardno=' + cardno + '&_xsrf=' + getCookie("_xsrf") + '&phone=' + phone + '&nickname=' + nickname + '&password=' + password,
+            success: function(msg) {
+                if(msg.res == 1){
+                    overlay.update({
+                        icon: "{{ static_url('point/images/check.png') }}",
+                        duration: 2e3,
+                        text: "修改成功"
+                    });
+                    overlay_clear(overlay);
+                }else{
+                    overlay.update({
+                        icon: "{{ static_url('point/images/cross.png') }}",
+                        duration: 2e3,
+                        text: msg.data
+                    });
+                    overlay_clear(overlay);
+                }
+            }
+        });
+	})
+    
+   
+   
+});
+
+
+//时间戳格式化
+function getLocalTime(nS) {     
+    var times = new Date(parseInt(nS) * 1000).toLocaleDateString().replace(/年|月|\//g, "-").replace(/日/g, " ");
+    param = times.split('-')
+    for( var x in param ){
+        if( parseInt( param[x] ) < 10 ){
+            param[x] = '0'+param[x];
+        } 
+    }
+    return param.join("-");
+}
+//关闭效果
+function overlay_clear( obj ){
+    window.setTimeout(function() {
+        obj.hide();
+    }, 3000);
+}
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+</script>
+</body>
+</html>

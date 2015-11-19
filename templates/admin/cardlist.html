@@ -1,0 +1,111 @@
+{% extends "frame.html" %}
+
+{% block title %}卡列表{% end %}
+
+{% block javascript %}
+<script>
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
+function del(id){
+    if( confirm('您确定要删除该无绑定卡片？') ){
+        window.location = '/admin/delete_card?id='+id
+    }
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">卡列表</span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">
+                <div class="dataTables_filter">
+                    <form name="form1" id="form1" method="get" action="#" >
+                        <label>识别码: <input name="cardno" type="text" value="{{ search['cardno'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <label>卡分类: <input name="cardtype" type="text" value="{{ search['cardtype'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <label>卡号: <input name="cardnumber" type="text" value="{{ search['cardnumber'] }}" ></label>
+                        <input type="submit" class="mws-button black small" value="搜索" >
+                    </form>
+                </div>
+                <table class="mws-table">
+                    <thead>
+                        <tr>
+                            <th>识别码</th>
+                            <th>卡号</th>
+                            <th>开通时间</th>
+                            <th>绑定用户</th>
+                            <th>余额</th>
+                            <th>累计消费</th>
+                            <th>电话</th>
+                            <th>身份证</th>
+                            <th>相关操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if clist %}
+                        {% raw xsrf_form_html() %}
+                        {% import time %}
+                        {% for lt in clist %}
+                        <tr class="gradeA">
+                            <td>{{ lt['cardno'] }}</td>
+                            <td>{{ '%04d%08d'%(lt['cardtype'],lt['cardid']) }}</td>
+                            <td>{{ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lt['reg_time'])) }}</td>
+                            <td>{% if not lt['username'] %}未绑定{% else %}<a href="/admin/user_details?id={{ lt['user_id'] }}" >{{ lt['username'] }}</a>{% end %}</td>
+                            <td>{{ lt['balance'] }}</td>
+                            <td>{{ lt['payed'] }}</td>
+                            <td>{{ lt['phone'] }}</td>
+                            <td>{{ lt['idcard'] }}</td>
+                            <td>{% if lt['username'] %}
+                                <a href="/admin/recharge_list?card={{ '%04d%08d'%(lt['cardtype'],lt['cardid']) }}"><img title="充电记录" alt="充电记录" src="{{ static_url("admin/css/icons/16/plug.png") }}"></a>&nbsp;&nbsp;&nbsp;
+                                <a href="#" url="/admin/deposit_list?card={{ '%04d%08d'%(lt['cardtype'],lt['cardid']) }}" ><img title="充值记录" alt="充值记录" src="{{ static_url("admin/css/icons/16/money_dollar.png") }}"></a>
+                                {% else %}
+                                <a href="javascript:void(del('{{lt['id']}}'))" ><img title="删除冗余记录" alt="删除冗余记录" src="{{ static_url("admin/css/icons/16/cross.png") }}"></a>
+                                {% end %}
+                            </td>
+                        </tr>
+                        {% end %}
+                        {% else %}
+                        <tr class="gradeX">
+                            <td colspan="9">没有找到您要查找的卡信息</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            {% if page_bar %}
+                <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                <div class="dataTables_paginate paging_full_numbers">
+                    {% if page_bar['left_bar'] %}
+                    <a href="{{ page_bar['sign']['first'] }}"><span class="first paginate_button">首页</span></a>
+                    <a href="{{ page_bar['sign']['prev'] }}"><span class="previous paginate_button">上一页</span></a>
+                    {% end %}
+                    <span>
+                        {% for l in page_bar['left_bar'] %}
+                        <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                        {% end %}
+                        <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                        {% for r in page_bar['right_bar'] %}
+                        <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                        {% end %}     
+                    </span>
+                    {% if page_bar['right_bar'] %}
+                    <a href="{{ page_bar['sign']['next'] }}"><span class="next paginate_button">下一页</span></a>
+                    <a href="{{ page_bar['sign']['last'] }}"><span class="last paginate_button">末页</span></a>
+                    {% end %}
+               </div>
+            {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

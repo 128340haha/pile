@@ -1,0 +1,67 @@
+{% extends "frame.html" %}
+
+{% block title %}新建测试卡片{% end %}
+
+{% block javascript %}
+<script type="text/javascript">
+function check_param(){
+    var cardtype = $('input[name=cardtype]').val();
+    var cardno = $('input[name=cardno]').val();
+    if ( cardtype == '' ) {
+        alert('识别码异常,请联系管理员');
+        return false;
+    } 
+    if ( cardno == '' ) {
+        alert('识别码不能为空');
+        return false;
+    }
+    if( isNaN( cardno ) ){
+        alert('识别码是数字');
+        return false;
+    }
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-eyedropper">新建测试卡片<input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" name="form2" method="post" onsubmit="return check_param()" action="/admin/add_card">
+                {% raw xsrf_form_html() %}
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+                        <label>卡分类:</label>
+                        <div class="mws-form-item" style="width:160px;">
+                            {% if type_list %}
+                            <select name='cardtype'>
+                                {% for tl in type_list %}
+                                <option value="{{tl['cardtype']}}" >{{tl['typename']}}{{tl['cardtype']}}</option>
+                                {% end %}
+                            </select>
+                            {% end %}
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>卡片识别码</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="cardno" value="" class="mws-textinput" />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label></label>
+                        <input type="submit" value="添加" class="mws-button orange">
+                    </div>
+                </div>
+            </form>
+        </div>      
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

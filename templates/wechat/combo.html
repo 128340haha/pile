@@ -1,0 +1,216 @@
+{% extends "main.html" %}
+
+{% block title %} {% end %}
+
+{% block header %}
+    <span class="back"><a href="/recharge"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充电</span>
+{% end %}
+
+{% block javascript %}
+    <link href="{{ static_url("wechat/css/sweet-alert.css") }}" rel="stylesheet">
+{% end %}
+
+{% block body %}
+<form method="post" id="form1" name="form1" action="/act_charge" >
+{% raw xsrf_form_html() %}
+<section id="charge">
+	<div class="charge-title">当前充电桩号码</div>
+	<div class="charge-number">{{code}}</div>
+    <div class="charge-balance"><p class="price">当前电价：<span>{{price}}</span>元/度</p><p class="balance">余额：<span>{{balance}}</span>元</p></div>
+   
+    <div class="charge-options">
+        <div class="o-box">
+            <div class="o-list">
+                {% for combo in combos %}
+            	<div class="list" data-l="{{combo['code']}}">{{combo['name']}}</div>
+                {% end %}
+            </div>
+            <div class="o-content">
+                {% for combob in combos %}
+            	<div class="content" data-o="{{combob['code']}}">
+                	<div class="head">
+                    	<span class="back"><i class="fa fa-chevron-left"></i></span>{{combob['name']}}
+                    </div>
+                    <div class="text">
+                        {% if combob['code'] == 'fill' %}
+                            <h4><span id="{{combob['code']}}_sign">{{combob['sign']}}</span></h4>
+                        {% else %}
+                            <div class="o-input">
+                               <input type="text" name="{{combob['code']}}_input" id="{{combob['code']}}_input" placeholder="0"/>
+                               <label for="m-inpu" id="{{combob['code']}}_sign">{{combob['sign']}}</label>
+                            </div>
+                        {% end %}	
+                        <div class="tips">
+                            <p>*{{combob['notice']}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% end %}
+            </div>
+        </div>
+    </div>
+    <div class="charge-btn">
+    	<a href="#">确定充电</a>
+    </div>
+</section>
+<input type="hidden" name='choose' id='choose' value='' />
+<input type="hidden" name='code' id='code' value='{{code}}' />
+
+</form>
+{% end %}
+ 
+{% block footer %} 
+<script src="{{ static_url("wechat/js/sweet-alert.min.js") }}"></script>
+<script>
+var onesubmit = false;
+$(document).ready(function() {
+ 
+	$('#charge .charge-options .o-list .list').click(function(){
+       
+		var d = $(this).attr('data-l');
+ 		
+        $('#choose').val( d )
+
+		var h = $('#charge .charge-options .o-content').find('div[data-o="'+d+'"]').height();
+		
+			$('#charge .charge-options .o-content').find('div[data-o="'+d+'"]').addClass('active');	
+		
+			$('#charge .charge-options .o-box').stop().animate({height:h},200);
+			
+			$('#charge .charge-options .o-list').addClass('active');
+	 
+			$('#charge .charge-options .o-content').addClass('active');
+ 
+	})
+	
+	$('#charge .charge-options .back').click(function(){
+		
+        $('#choose').val('')
+
+		$('#charge .charge-options .o-box').stop().animate({height:'200px'},200);
+		
+		$('#charge .charge-options .o-content').find('.content').removeClass('active');
+		
+		$('#charge .charge-options .o-list').removeClass('active');
+	 
+		$('#charge .charge-options .o-content').removeClass('active');
+ 	
+	})
+	
+	
+	$('.charge-btn').click(function(){
+
+        $('.charge-btn').attr('disabled','disabled')
+
+        setTimeout(function() {
+            $('.charge-btn').attr('disabled',false)
+        }, 2000);    
+
+        choose = $('#choose').val()
+
+		var v = $('#'+choose+'_input').val(); 
+
+        var novalue = false;
+
+        switch( choose ){
+            case 'fill':
+                //pass
+                novalue = true;
+                break;
+            case 'electric':
+            case 'payment':
+                reg = /^\d+(\.\d{1})?$/
+                legal = reg.test( v );
+                if( isNaN( v ) || parseFloat(v) <= 0 || !legal ){
+                    swal({ title: "错误",   text: "请输入正确的充值参数",   type: "error" });
+                    return
+                }
+                break;
+            case 'minute':
+                reg = /^\d+$/
+                legal = reg.test( v );
+                if( isNaN( v ) || parseInt(v) <= 0 || !legal ){
+                    swal({ title: "错误",   text: "请输入正确的充值参数",   type: "error" });
+                    return
+                }
+                break;
+            default:
+                swal({ title: "错误",   text: "请选择充值方式",   type: "error" });
+                return
+        }
+
+        //检查电桩状态
+        mess = false;
+        $.ajax({
+           type: "POST",
+           url: "/device_notice",
+           data: "code="+$('#code').val()+'&value='+v+'&choose='+choose+'&_xsrf='+getCookie("_xsrf"),
+           success: function(msg){
+              switch( msg ){
+                 case '1':
+                    //pass
+                    break;
+                 case '2':
+                    mess = "电桩工作中,请稍后再试";
+                    break;
+                 case '3':
+                    mess = "电桩离线或访问超时";
+                    break;
+                 case '4':
+                    mess = "获取电桩地址失败";
+                    break;
+                 case '5':
+                    mess = "提交参数异常或者余额不足";
+                    break;
+                 case '6':
+                    mess = "用户绑卡异常,请联系客服";
+                    break;
+                 case '7':
+                    mess = "当前电价异常,请联系客服";
+                    break;
+                 case '8':  
+                    mess = "您有未完成的订单(或正在充电中)";
+                    break;
+                 default:
+                    mess = "未知错误,请稍后再试";
+                    break;
+              }
+              if ( mess ){
+                swal("异常提醒", mess, "error");
+                return
+              }else{
+                 var pile = "使用电桩:"+$('#code').val()+'\n';
+                 var model = "充电类型:"+$('div[data-l='+choose+']').html()+'\n';
+                 var value = novalue ? '' : '数值:'+v+$('#'+choose+'_sign').html();
+
+                 swal({   
+                    title: "最终确认",   
+                    text: pile+model+value,   
+                    type: "warning",   
+                    showCancelButton: true,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "确认提交",
+                    cancelButtonText:"取消",   
+                    closeOnConfirm: false }, 
+                    function(){   
+                        if ( !onesubmit ){
+                            $('#form1').submit();
+                            onesubmit = true;
+                        }
+                    }
+                 );
+              }
+           }
+        });
+	}) 
+ 
+    function getCookie(name) {
+        var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+        return r ? r[1] : undefined;
+    }
+
+});
+
+</script>
+{% end %}

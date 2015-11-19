@@ -1,0 +1,5 @@
+setup.py
+newblash/webapi.egg-info/PKG-INFO
+newblash/webapi.egg-info/SOURCES.txt
+newblash/webapi.egg-info/dependency_links.txt
+newblash/webapi.egg-info/top_level.txt

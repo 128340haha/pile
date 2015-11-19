@@ -1,0 +1,136 @@
+{% extends "frame.html" %}
+
+{% block title %}售卡站点{% end %}
+
+{% block javascript %}
+<script type="text/javascript">
+function check_param(){
+    var sellername = $('input[name=sellername]').val();
+    var phone = $('input[name=phone]').val();
+    var appid = $('input[name=appid]').val();
+    var oldkey = $('input[name=oldkey]').val();
+    var appkey = $('input[name=appkey]').val();
+    var ckkey = $('input[name=ckkey]').val();
+    if ( sellername == '' ) {
+        alert('商家名不能为空');
+        return false;
+    }
+    var reg = /1[3458]{1}\d{9}$/
+    if( !reg.test(phone) ){
+        alert("手机格式不对");
+        return false;
+    }
+    if ( appid == '' ) {
+        alert('账号不能为空');
+        return false;
+    }else if(appid.indexOf(" ") >=0){
+        alert("账号不能带空格");
+        return false;
+    }else if(escape(appid).indexOf("%u") >= 0) { 
+        alert('账号不能出现中文');
+        return false;
+    }
+    if ( oldkey == '' ){
+        //旧密码为空
+        if ( appkey == '' && ckkey == '' ){
+            //pass
+        }else{
+            alert('请先输入旧密码');
+            return false;
+        }
+    }else{
+        if ( appkey == '' ) {
+            alert('密码不能为空');
+            return false;
+        }else if( appkey != ckkey ){
+            alert("两次密码不一致");
+            return false;
+        }
+    }
+    
+
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-eyedropper">售卡站点信息<input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" name="form2" method="post" onsubmit="return check_param()" action="/admin/act_seller">
+                {% raw xsrf_form_html() %}
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+                        <label>站点名称</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="sellername" value="{{ info['sellername'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>电话</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="phone" value="{{ info['phone'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>账号</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="appid" value="{{ info['appid'] }}" class="mws-textinput" />
+                        </div>
+                    </div>  
+                    <div class="mws-form-row">
+                        <label>负责人</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="duty" value="{{ info['duty'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    {% if act == 'edit' %}
+                    <div class="mws-form-row">
+                        <label>旧密码</label>
+                        <div class="mws-form-item large">
+                            <input type="password" name="oldkey" value="" class="mws-textinput" />
+                        </div>
+                    </div>
+                    {% else %}
+                        <input type="hidden" name="oldkey" value="0" />
+                    {% end %}
+                    <div class="mws-form-row">
+                        <label>密码</label>
+                        <div class="mws-form-item large">
+                            <input type="password" name="appkey" value="" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>密码确认</label>
+                        <div class="mws-form-item large">
+                            <input type="password" name="ckkey" value="" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>开启状态</label>
+                        <div class="mws-form-item clearfix">
+                            <ul class="mws-form-list inline">
+                                <li><input type="radio" name="status" value="1" {% if info['status'] == 1 %}checked{% end %} /> <label>开启</label></li>
+                                <li><input type="radio" name="status" value="0" {% if info['status'] == 0 %}checked{% end %} /> <label>关闭</label></li>
+                            </ul>
+                        </div>
+                    </div>  
+                    <div class="mws-form-row">
+                        <label></label>
+                        <input type="submit" value="提交" class="mws-button orange">&nbsp;&nbsp;&nbsp;
+                        <input type="reset" value="重置" class="mws-button black">
+                    </div>
+                </div>
+                <input type="hidden" value="{{ info['id'] }}" class="mws-textinput" name="id" />
+                <input type="hidden" name="act" value="{{ act }}" >
+            </form>
+        </div>      
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

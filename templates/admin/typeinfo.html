@@ -1,0 +1,87 @@
+{% extends "frame.html" %}
+
+{% block title %}分类信息{% end %}
+
+{% block javascript %}
+<script type="text/javascript">
+function check_param(){
+    var cardtype = $('input[name=cardtype]').val();
+    var typename = $('input[name=typename]').val();
+    var ascno = $('input[name=ascno]').val();
+    if ( cardtype == '' ) {
+        alert('识别码不能为空');
+        return false;
+    }else if( isNaN( cardtype ) ){
+        alert('识别码是数字');
+        return false;
+    }
+    if ( typename == '' ) {
+        alert('分类名不能为空');
+        return false;
+    }
+    if ( ascno == '' ) {
+        alert('排序不能为空');
+        return false;
+    }else if( parseInt(ascno) <= 0 || parseInt(ascno) >= 100 ){
+        alert('排序在1-99之间');
+        return false;
+    }
+
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-eyedropper">分类信息<input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" name="form2" method="post" onsubmit="return check_param()" action="/admin/act_type">
+                {% raw xsrf_form_html() %}
+                <div class="mws-form-inline">
+                    {% if act == 'edit' %}
+                    <div class="mws-form-row">
+                        <label>id</label>
+                        <div class="mws-form-item large">
+                            <input type="text" value="{{ info['id'] }}" class="mws-textinput" disabled />
+                        </div>
+                    </div>
+                    {% end %}
+                    <div class="mws-form-row">
+                        <label>分类识别码</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="cardtype" value="{{ info['cardtype'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>分类名称</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="typename" value="{{ info['typename'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+
+                    <div class="mws-form-row">
+                        <label>排序</label>
+                        <div class="mws-form-item large">
+                            <input type="text" name="ascno" value="{{ info['ascno'] }}" class="mws-textinput" />
+                        </div>
+                    </div>  
+                    <div class="mws-form-row">
+                        <label></label>
+                        <input type="submit" value="提交" class="mws-button orange">&nbsp;&nbsp;&nbsp;
+                        <input type="reset" value="重置" class="mws-button black">
+                    </div>
+                </div>
+                <input type="hidden" value="{{ info['id'] }}" class="mws-textinput" name="id" />
+                <input type="hidden" name="act" value="{{ act }}" >
+            </form>
+        </div>      
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

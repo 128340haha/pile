@@ -1,0 +1,55 @@
+{% extends "frame.html" %}
+
+{% block title %}电桩异常列表{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">异常电桩列表</span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper"> 
+            <table class="mws-table">
+                <thead>
+                    <tr>
+                        <th>设备号</th>
+                        <th>设备名称</th>
+                        <th>GPS</th>
+                        <th>失联时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if dlist %}
+                    {% raw xsrf_form_html() %}
+                    {% for lt in dlist %}
+                    <tr class="gradeA">
+                        <td>{{ lt['code'] }}</td>
+                        <td>{{ lt['name'] }}</td>
+                        <td>{{ lt['latitude'] }}，{{ lt['longitude'] }}</td>
+                        <td style="color:red;">
+                            {% if nowtime - lt['heart_time'] >= 3600 %}
+                            {% raw int( (nowtime - lt['heart_time']) / 3600 ) %}时{% raw int( (nowtime - lt['heart_time']) % 3600 / 60 ) %}分{% raw int( (nowtime - lt['heart_time']) % 60 ) %}秒
+                            {% elif nowtime - lt['heart_time'] > 60 %}
+                            {% raw int( (nowtime - lt['heart_time']) / 60 ) %}分{% raw int( (nowtime - lt['heart_time']) % 60 ) %}秒
+                            {% else %}
+                            {% raw nowtime - lt['heart_time'] %}
+                            {% end %}
+                        </td>
+                    </tr>
+                    {% end %}
+                    {% else %}
+                    <tr class="gradeX">
+                        <td colspan="6">没有找到您要查找的信息</td>
+                    </tr>
+                    {% end %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

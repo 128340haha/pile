@@ -1,0 +1,565 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html" />
+<meta name="renderer" content="webkit" />
+<!-- 告诉webkit内核浏览器初始缩放比例为1 -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- 百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符 -->
+<meta name="description" content="百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符">
+<!-- 关于文档的关键字标签 -->
+<meta name="keywords" content="关于文档的关键字标">
+<title>电桩分布</title>
+<!-- 更换第三方图标库,Font Awesome <i class="fa fa-medium">-->
+<link href="{{ static_url("wechat/css/bootstrap.css") }}" rel="stylesheet">
+<link href="{{ static_url("wechat/css/index.css") }}" rel="stylesheet">
+<style type="text/css">
+html, body { height: 100%; margin: 0px; padding: 0px; overflow: hidden; }
+#map { width: 100%; height: 100%;  }
+/*列表*/
+#mapText { position: absolute; height: 100%; width: 100%; top:50px; left: 100%;  padding-top:90px; margin-top: -50px;  background:#ECECEC; -webkit-box-shadow: 0 -5px 10px rgba(0,0,0,0.5); -webkit-transition: all .3s; z-index: 1; }
+#mapText.active{ left:0; }
+#mapText #navList{ width:100%; height:40px; border-bottom: 1px solid #E6E8EC; background:#F2F4F4; position:absolute; top:50px; left:0;}
+#mapText #navList:after{content:''; position:absolute; left:50%; top:5px; width:2px; height:30px; margin-left:-1px; background:#E6E8EC;}
+#mapText #navList > div{ width:50%; float:left; height:40px; text-align: center; line-height: 40px; font-size: 1.3em;}
+#mapText #powerList { position:absolute; top:90px;left:0; width: 100%; height: 100%; overflow-y: auto; }
+#mapText #powerList .list{ border-bottom: 1px solid #ccc; padding:10px 10px 10px 80px; position:relative; background:#fff;}
+#mapText #powerList .list .img{ position:absolute; left:10px; top:10px; width:60px; height:60px; background-position: center center; background-repeat: no-repeat;}
+#mapText #powerList .list .img.idle{ background-image: url("../images/idle.png");}
+#mapText #powerList .list .img.busy{ background-image: url("../images/busy.png");}
+#mapText #powerList .list .img.fault{ background-image: url("../images/fault.png");}
+#mapText #powerList .list .text .txt{ width:100%; height:40px; line-height: 40px; overflow:hidden;}
+#mapText #powerList .list .text .txt .status{ float:left; font-size: 1.6em;}
+#mapText #powerList .list .text .txt .navigation{ float:right; width:50px; height:40px;line-height: 40px; font-size: 1.6em;text-align: center; color:#0093FF;}
+#mapText #powerList .list .text .msg{ width:100%; height:20px; line-height: 20px; color: #A7A7A7; overflow:hidden;}
+#mapText #powerList .list .text .msg .address{ float:left;}
+#mapText #powerList .list .text .msg .distance{ float:right;}
+/*导航*/
+#navigation{ width:100%; height:300px; padding:10px; position: absolute; bottom:-290px; left:0;   transition: all .3s ease-in-out;}
+#navigation.active{ bottom:0;  }
+#navigation #navBox{ width:100%; height:280px; background:#fff; overflow-y:auto; box-shadow: rgba(0, 0, 0, 0.498039) 0px 0px 6px;
+  border-radius: 2px; padding:10px;}
+#zoomMap{ position:absolute;left:10px;bottom:10px;width:100px;height:40px; }
+#maxMap,#minMap{ float:left; margin-right: 10px; width:40px;height:40px;background:#fff;box-shadow: rgba(0, 0, 0, 0.498039) 0px 0px 6px;
+  border-radius: 2px;text-align:center;}
+#moveMap{ position:absolute;right:10px;bottom:10px;width:40px;height:40px;background:#fff;box-shadow: rgba(0, 0, 0, 0.498039) 0px 0px 6px;
+  border-radius: 2px;text-align:center;}
+#searchMap{  position:absolute;left:0;top:60px;width:100%;height:40px;padding:0 10px;}
+#searchMap #searchbox{ width:100%; height:40px; background:#fff;box-shadow: rgba(0, 0, 0, 0.498039) 0px 0px 6px;
+  border-radius: 2px; padding-right:60px; position:relative; }
+#searchMap #searchbox #searchtext{ width:100%; height:40px;}
+#searchMap #searchbox #searchtext > input { border:0; width:100%; height:40px; padding:0 10px;}
+#searchMap #searchbox #searchbtn { width:60px; height:40px; line-height: 40px;  position:absolute; right:0px; top:0; border-left:1px solid #ccc; text-align: center;}
+#navClose{ width:40px; height:40px; 
+  background-color: rgb(255, 255, 255); box-shadow: rgba(0, 0, 0, 0.498039) 0px 0px 6px;
+  border-radius: 2px; text-align: center; margin-bottom: 10px;  position:absolute; top:-40px; right:10px; opacity:0; visibility:hidden;}
+#navClose > i,#maxMap > i,#minMap > i,#moveMap > i{ color:#0093FF; line-height: 40px; }
+/*弹出框*/
+.msgtxt{ width:180px; height:50px; line-height: 50px; position:absolute; top:-50px; left:50%; margin-left: -90px; background:rgba(255,255,255,0.8); box-shadow: 0 0 6px rgba(50, 50, 50, 0.5);transition: all .5s ease-in-out;}
+.msgtxt:after{  content:''; position:absolute; bottom:-10px; left:50%; margin-left: -10px;  width:0; 
+    height:0; 
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-top:10px solid rgba(255,255,255,0.8);  }
+.msgtxt .status{ width:50px; height:50px;  float: left;}
+.msgtxt .distance{ width:80px; height:50px;  float: left; border-left:1px solid rgba(0,0,0,0.1);  border-right:1px solid rgba(0,0,0,0.1);}
+.msgtxt .navigation{ width:50px; height:50px;  float: left;}
+.msgtxt .navigation > i{ line-height: 50px; font-size: 16px;}
+#searchlist{  width:100%; height:200px; left:0; top:10px; background:#fff; margin-top:5px; box-shadow: rgba(0, 0, 0, 0.498039) 0px 0px 6px;
+  border-radius: 2px; display:none; overflow-y:auto;}
+#searchlist .slist{ width:100%; height:55px; padding:5px 10px; border-bottom: 1px solid #ccc;}
+#searchlist .slist .sname{ width:100%; height:25px; line-height: 25px; color:#000; margin:0; overflow:hidden; }
+#searchlist .slist .saddress{ width:100%; height:20px; line-height: 20px; color:#bbb; margin:0; overflow:hidden;}
+</style>
+<script charset="utf-8" src="http://map.qq.com/api/js?v=2.exp"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="{{ static_url("wechat/js/bootstrap/jquery-1.11.1.min.js") }}"></script>
+<script>
+var map = null;
+var drivingService = null;
+var minlayer = 18;
+var searchService = null;
+ 
+function init(user, charging) {
+    var center = new qq.maps.LatLng(user.sw, user.ne);
+    document.getElementById('minMap').onclick = function() {
+        map.zoomTo((map.getZoom() - 1));
+        flashmap( user, map.getZoom() - 1 );
+    }
+    document.getElementById('maxMap').onclick = function() {
+        map.zoomTo((map.getZoom() + 1));
+        flashmap( user, map.getZoom() + 1 );
+    }
+    document.getElementById('moveMap').onclick = function() {
+            getMidpoint(center);
+    }
+    //panTo()将地图中心移动到指定的经纬度坐标。
+    map.panTo(center);
+ 
+    //加载用户
+    mMap(user);
+    //加载充电桩
+    for (var i in charging) {
+        tMap(user,charging[i]);
+    }
+    //路线接口
+    drivingService = new qq.maps.DrivingService({
+        panel: document.getElementById('navBox'),
+        map: map
+    });
+}
+
+function mMap(setMap) {
+    var options = setMap;
+    options = {
+        sw: 22.527340,
+        ne: 113.915600,
+        status: 0
+    };
+    switch (setMap.status) {
+        case 1:
+            setMap.status = '空闲';
+            break;
+        case 0:
+            setMap.status = '充电中';
+            break;
+    }
+    var end = new qq.maps.LatLng(setMap.sw, setMap.ne);
+    //添加自定义覆盖物
+    var Monitor = function(opts) {
+            qq.maps.Overlay.call(this, opts);
+        }
+        //继承Overlay基类
+    Monitor.prototype = new qq.maps.Overlay();
+    //定义construct,实现这个接口来初始化自定义的Dom元素
+    Monitor.prototype.construct = function() {
+            this.dom = document.createElement('div');
+            this.dom.setAttribute('class', 'user');
+            var _myDom = this.dom;
+            _myDom.style.cssText = 'position:absolute;text-align:center;width:50px;height:60px; ';
+            _myDom.innerHTML = '<img src="{{ static_url("wechat/images/umap.png") }}"/>';
+            //将dom添加到覆盖物层，overlayMouseTarget的顺序容器 5，此容器包含透明的鼠标相应元素，用于接收Marker的鼠标事件
+            this.getPanes().overlayMouseTarget.appendChild(this.dom);
+        }
+        //绘制和更新自定义的dom元素
+    Monitor.prototype.draw = function() {
+        //获取地理经纬度坐标
+        var position = this.get('position');
+        if (position) {
+            var pixel = this.getProjection().fromLatLngToDivPixel(position);
+            var _myDom = this.dom;
+            _myDom.style.left = pixel.getX() + (-25) + 'px';
+            _myDom.style.top = pixel.getY() + (-60) + 'px';
+        }
+    }
+    var myDom = new Monitor({
+        map: map,
+        position: end
+    });
+}
+
+function tMap(user,setMap) {
+    var options = setMap;
+    options = {
+        sw: 22.527340,
+        ne: 113.915600,
+        status: 0
+    };
+    var status_img,status_txt;
+    switch (setMap.status) {
+        case 0:
+            status_txt = '忙碌';
+            status_img = 'busy';
+            break;
+        case 1:  
+            status_txt = '空闲';
+            status_img = 'idle';
+            break;
+        case 2:
+            status_txt = '故障';
+            status_img = 'fault';
+            break;
+    }
+    var start = new qq.maps.LatLng(user.sw, user.ne);
+    var end = new qq.maps.LatLng(setMap.sw, setMap.ne);
+    //添加自定义 空气信息窗口
+    var Monitor = function(opts) {
+            qq.maps.Overlay.call(this, opts);
+        }
+        //继承Overlay基类
+    Monitor.prototype = new qq.maps.Overlay();
+    //定义construct,实现这个接口来初始化自定义的Dom元素
+    Monitor.prototype.construct = function() {
+            this.dom = document.createElement('div');
+            this.dom.setAttribute('class', 'mark');
+            var _myDom = this.dom;
+            _myDom.style.cssText = 'position:absolute;text-align:center;width:50px;height:60px;opacity:0;-webkit-transition:all 0.35s;';
+            _myDom.innerHTML = '<div class="img"><img src="{{ static_url("wechat/images/cmap.png") }}"/></div><div class="msgtxt" style="opacity:0; visibility: hidden;"><div class="status">' + status_txt + '</div><div class="distance"></div><div class="navigation"><i class="fa fa-level-up"></i></div></div>';
+            //将dom添加到覆盖物层，overlayMouseTarget的顺序容器 5，此容器包含透明的鼠标相应元素，用于接收Marker的鼠标事件
+            this.getPanes().overlayMouseTarget.appendChild(this.dom);
+            //点击头像弹出信息
+            _myDom.getElementsByClassName('img')[0].onclick = function(event) {
+                if (_myDom.getElementsByClassName('msgtxt')[0].style.visibility == 'hidden') {
+                    _myDom.getElementsByClassName('msgtxt')[0].style.visibility = 'visible';
+                    _myDom.getElementsByClassName('msgtxt')[0].style.opacity = 100;
+                } else {
+                    _myDom.getElementsByClassName('msgtxt')[0].style.opacity = 0;
+                    _myDom.getElementsByClassName('msgtxt')[0].style.visibility = 'hidden';
+                }
+                document.onclick = function() {
+                    _myDom.getElementsByClassName('msgtxt')[0].style.opacity = 0;
+                    _myDom.getElementsByClassName('msgtxt')[0].style.visibility = 'hidden';
+                }
+                event.stopPropagation(); //阻止事件向上冒泡
+            }
+            _myDom.getElementsByClassName('navigation')[0].onclick = function() {
+                    getResult(start, end);
+                    document.getElementById('navClose').style.opacity = '1';
+                    document.getElementById('navClose').style.visibility = 'visible';
+                    document.getElementById('navigation').className = 'active';
+                }
+                //详细列表
+            var mapList = document.createElement('div');
+            mapList.className = 'list';
+            mapList.innerHTML = '<div class="img ' + status_img + '"></div><div class="text"><div class="txt"><div class="status">' + status_txt + '</div><div class="navigation"><i class="fa fa-location-arrow"></i></div></div><div class="msg"><div class="address"></div><div class="distance"></div></div></div>';
+            document.getElementById('powerList').appendChild(mapList);
+            mapList.onclick = function() {
+                map.panTo(new qq.maps.LatLng(setMap.sw, setMap.ne));
+            }
+            mapList.getElementsByClassName('navigation')[0].onclick = function() {
+                    getResult(start, end);
+                    document.getElementById('navClose').style.opacity = '1';
+                    document.getElementById('navClose').style.visibility = 'visible';
+                    document.getElementById('navigation').className = 'active';
+                    document.getElementById('mapText').className = '';
+                    document.getElementById('mapmore').className = 'closelist';
+                    document.getElementById('mapmore').innerHTML = '更多';
+                }
+                //设置城市信息查询服务
+            var geocoder = new qq.maps.Geocoder();
+            //通过经纬度查询   
+            geocoder.getAddress(end);
+            geocoder.setComplete(function(result) {
+                mapList.getElementsByClassName('address')[0].innerHTML = result.detail.addressComponents.district + result.detail.addressComponents.town + result.detail.addressComponents.village + result.detail.addressComponents.street + result.detail.addressComponents.streetNumber;
+            });
+            //距离计算
+            distance = new qq.maps.DrivingService({});
+            distance.search(start, end);
+            distance.setComplete(function(result) {
+                var distance = (result.detail.distance / 1000).toFixed(1);
+                _myDom.getElementsByClassName('distance')[0].innerHTML = distance + ' 公里';
+                mapList.getElementsByClassName('distance')[0].innerHTML = distance + ' 公里';
+            });
+        }
+        //绘制和更新自定义的dom元素
+    Monitor.prototype.draw = function() {
+        //获取地理经纬度坐标
+        var position = this.get('position');
+        if (position) {
+            var pixel = this.getProjection().fromLatLngToDivPixel(position);
+            var _myDom = this.dom;
+            _myDom.style.left = pixel.getX() + (-25) + 'px';
+            _myDom.style.top = pixel.getY() + (-60) + 'px';
+        }
+
+        function changedmap() {
+            var user_center = new Array();
+            user_center = String(position).split(",");
+            var this_center = new Array();
+            this_center = String(map.getBounds()).split(",");
+            //判断范围内的坐标 执行函数
+            var user_SW = user_center[0];
+            var user_NE = user_center[1];
+            var this_minSW = this_center[0];
+            var this_minNE = this_center[1];
+            var this_maxSW = this_center[2];
+            var this_maxNE = this_center[3];
+            if (user_SW > this_minSW && user_NE > this_minNE && user_SW > this_maxSW && user_NE < this_maxNE) {
+                _myDom.style.opacity = 100;
+            } else {
+                _myDom.style.opacity = 0;
+            }
+        }
+        //当可视区域范围更改时会触发此事件。返回当前地图的视野范围。
+        qq.maps.event.addListener(map, 'bounds_changed', changedmap);
+        changedmap();
+    }
+    var myDom = new Monitor({
+        map: map,
+        position: end
+    });
+}
+
+function getResult(start, end) {
+    drivingService.search(start, end);
+}
+
+function getMidpoint(center) {
+    map.panTo(center);
+}
+
+function distanceSort() {
+    var table = document.getElementById('powerList');
+    var tr = table.getElementsByClassName('list');
+    var trValue = new Array();
+    for (var i = 0; i < tr.length; i++) {
+        trValue[i] = tr[i]; //将表格中各行的信息存储在新建的数组中  
+        tr[i].style.display = 'block';
+    }
+    trValue.sort(function(tr1, tr2) {
+        var value1 = parseFloat(tr1.getElementsByClassName('distance')[0].innerHTML);
+        var value2 = parseFloat(tr2.getElementsByClassName('distance')[0].innerHTML);
+        return value1 - value2;
+    });
+
+    var fragment = document.createDocumentFragment(); //新建一个代码片段，用于保存排序后的结果  
+    for (var i = 0; i < trValue.length; i++) {
+        fragment.appendChild(trValue[i]);
+    }
+    table.appendChild(fragment); //将排序的结果替换掉之前的值  
+}
+
+function statusSort() {
+    var table = document.getElementById('powerList');
+    var tr = table.getElementsByClassName('list');
+    for (var i = 0; i < tr.length; i++) {
+        if (tr[i].getElementsByClassName('img')[0].className != 'img idle') {
+            tr[i].style.display = 'none';
+        }
+    }
+}
+
+function getSearch(user,search) {
+    var end = new qq.maps.LatLng(user.sw, user.ne);
+    var geocoder = new qq.maps.Geocoder();
+    var searchService = new qq.maps.SearchService();
+    //通过经纬度查询   
+    geocoder.getAddress(end);
+    geocoder.setComplete(function(result) {
+        searchService.setLocation(result.detail.addressComponents.city);
+        searchService.search(search);
+        searchService.setComplete(function(data) {
+            $('#searchlist').show();
+            var pois = data.detail.pois;
+            var str = '';
+            for(var i=0;i<pois.length;i++){
+                var tr = '<div class="slist" data-lat="'+pois[i].latLng.lat+'" data-lng="'+pois[i].latLng.lng+'"><p class="sname">'+pois[i].name+'</p><p class="saddress">'+pois[i].address+'</p></div>';
+                str += tr;
+            };
+            $('#searchlist').append(str);
+        });
+    });
+}
+ 
+window.onload = function(){
+    /*用户位置
+    var user = {
+        sw: 22.527340,
+        ne: 113.915600
+    };
+    //充电桩数据
+    var charging = [{
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 0
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 1
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 2
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 0
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 1
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 2
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 0
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 1
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 2
+    }, {
+        sw: 22 + Math.random(),
+        ne: 113 + Math.random(),
+        status: 0
+    }];
+    */
+    map = new qq.maps.Map(document.getElementById('map'), {
+        minZoom: 1,
+        maxZoom: 18,
+        zoom: 18,
+        disableDefaultUI: true
+    });
+    document.getElementById('mapmore').onclick = function() {
+        if (document.getElementById('mapmore').className == 'closelist') {
+            document.getElementById('mapText').className = 'active';
+            document.getElementById('mapmore').className = 'openlist';
+            document.getElementById('mapmore').innerHTML = '隐藏';
+        } else {
+            document.getElementById('mapText').className = '';
+            document.getElementById('mapmore').className = 'closelist';
+            document.getElementById('mapmore').innerHTML = '更多';
+        }
+    }
+    document.getElementById('navClose').onclick = function() {
+        if (document.getElementById('navigation').className == 'active') {
+            document.getElementById('navigation').className = '';
+        } else {
+            document.getElementById('navigation').className = 'active';
+        }
+    }
+    document.getElementById('nav-distance').onclick = function() {
+        distanceSort();
+    }
+    document.getElementById('nav-status').onclick = function() {
+        statusSort();
+    }
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: "{{ param['appid'] }}", // 必填，公众号的唯一标识
+        timestamp: {{ param['timestamp'] }}, // 必填，生成签名的时间戳
+        nonceStr: "{{ param['noncestr'] }}", // 必填，生成签名的随机串
+        signature: "{{ param['signature'] }}",// 必填，签名，见附录1
+        jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+    });
+    wx.ready(function(){
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+                var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                var speed = res.speed; // 速度，以米/每秒计
+                var accuracy = res.accuracy; // 位置精度
+            //    alert( 'latitude:'+latitude+',longitude:'+longitude+',accuracy:'+accuracy );
+                //用户位置
+                var user = {
+                    sw: latitude,
+                    ne: longitude
+                };
+                //更新获取范围内数据列表
+                get_area_device( user )
+            }
+        });
+    })
+//    init(user, charging);   
+}
+
+
+function get_area_device( user, range ){
+    range = range ? range : 1;
+    $.ajax({
+       type: "POST",
+       url: "/near_dev",
+       dataType: "json",
+       data: "latitude="+user['sw']+"&longitude="+user['ne']+'&range='+range+'&_xsrf='+getCookie("_xsrf"),
+       success: function(msg){
+         if( msg ){   
+            //成功
+            charging = [];
+            for( var i in msg ){
+                var obj = new Object();
+                obj.sw = msg[i].latitude;
+                obj.ne = msg[i].longitude;
+                obj.status = msg[i].status;
+                charging.push( obj );
+            }
+         }else{
+            charging = [];
+         }
+         init(user,charging);
+         document.getElementById('searchbtn').onclick = function(){
+            var address = document.getElementById("search").value;
+            getSearch(user,address);
+        };
+        $(document).off('click','#searchlist .slist').on('click','#searchlist .slist',function(){
+            $('#map .user').remove();
+            $('#map .mark').remove();
+            $('#powerList .list').remove();
+            $('#searchlist').hide();
+            $('#searchlist .slist').remove();
+            var user = { sw : $(this).attr('data-lat'), ne : $(this).attr('data-lng')};
+            init(user, charging);
+        });
+       } 
+    }); 
+}
+
+
+
+function flashmap( user, layer ){
+    if ( layer < minlayer && layer > 11 ){
+        if( layer == 16 ){
+            get_area_device( user, 2 )
+        }else if( layer == 14 ){
+            get_area_device( user, 3 )
+        }else if( layer == 12 ){
+            get_area_device( user, 4 )
+        }
+    }
+}
+
+
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+</script>
+</head>
+<body>
+{% raw xsrf_form_html() %}
+<header>
+    <span class="back"><!--<a href="#"><i class="fa fa-chevron-left"></i>Back</a>--></span>
+    <span class="title">导航</span>
+    <span class="register">
+        <span id="mapmore" class="closelist">
+            更多
+        </span>
+    </span>
+</header>
+<div id="map"></div>
+<div id="moveMap">
+    <i class="fa fa-arrows"></i>
+</div>
+<div id="zoomMap">
+    <div id="maxMap"><i class="fa fa-plus"></i></div>
+    <div id="minMap"><i class="fa fa-minus"></i></div>
+</div>
+<div id="searchMap">
+    <div id="searchbox">
+        <div id="searchtext"><input type="text" id="search"/></div>
+        <div id="searchbtn">搜索</div>
+        <div id="searchlist"></div>
+    </div>
+</div>
+<div id="mapText">
+    <div id="navList">
+        <div id="nav-distance">最近距离</div>
+        <div id="nav-status">空闲状态</div>
+    </div>
+    <div id="powerList"></div>
+</div>
+<div id="navigation">
+    <div id="navClose"><i class="fa fa-chevron-down"></i></div>
+    <div id="navBox"></div>
+</div>
+
+
+</body>
+</html>

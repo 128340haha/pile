@@ -1,0 +1,515 @@
+{% extends "header.html" %}
+
+{% block title %}用户中心{% end %}
+
+{% block body %}
+{% raw xsrf_form_html() %}
+<section id="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-5 col-md-4">
+                <div id="userbox">
+                    <div id="userhead">
+                        <div id="userimg">{% if info['headimgurl'] %}<img src="{{info['headimgurl']}}"/>{% elif info['sex'] == 1 or info['sex'] == '1' %}{<img src="{{ static_url("home/images/male.png") }}"/>}{% elif info['sex'] == 2 or info['sex'] == '2' %}<img src="{{ static_url("home/images/women.png") }}"/>{%end%}</div>
+                        <div id="username">
+                            <p id="uname">{% if info['nickname'] %}{{info['nickname']}}{%else%}{{info['username']}}{%end%}</p>
+                            <p id="uwechat">微信号{% if info['wechat'] == 1 %}<a nid="nbinding">已绑定</a>{%else%}<a>未绑定</a>{% end %}</p>
+                        </div>
+                    </div>
+                    <div id="userdata">
+                        <div class="list">
+                            <p>{{info['balance']}}</p>
+                            <span>账号余额</span>
+                        </div>
+                        <div class="list b">
+                            <p>{{charge['all']}}</p>
+                            <span>总充电次数</span>
+                        </div>
+                        <div class="list">
+                            <p>{{charge['month']}}</p>
+                            <span>本月充电次数</span>
+                        </div>
+                    </div>
+                    <div id="usercard">
+                        <p>{{ '%04d%08d'%(card['cardtype'],card['cardid']) }}</p>
+                        <span>绑定卡号</span>
+                    </div>
+                </div>
+                <div id="databox">
+                	<div class="list" id="user-record">
+                        <div class="dhead"><img src="{{ static_url("home/images/user.png") }}"/></div>
+                        <div class="dtext">
+                            <p>个人信息</p>
+                        </div>
+                    </div>
+                    <div class="list" id="charge-record" page="1">
+                        <div class="dhead"><img src="{{ static_url("home/images/charge.png") }}"/></div>
+                        <div class="dtext">
+                            <p>充电记录</p>
+                        </div>
+                    </div>
+                    <div class="list" id="money-record" page="1">
+                        <div class="dhead"><img src="{{ static_url("home/images/money.png") }}"/></div>
+                        <div class="dtext">
+                            <p>充值记录</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="sitebox">
+                    <div class="list" id="money-recharge">
+                        <div class="dhead"><img src="{{ static_url("home/images/recharge.png") }}"/></div>
+                        <div class="dtext">
+                            <p>充值</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-8">
+                <div id="textbox">
+                    <div class="title">个人信息</div>
+                    <div class="text done">
+                         
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="pay-bg"></div>
+    <div id="pay-box">
+    	<div class="pay-title">网上支付提示</div>
+        <div class="pay-content">
+        	<div class="pay-loading">
+            	<i class="fa fa-spinner fa-spin"></i>
+            </div>
+            <div class="pay-tips">
+            	<p>支付完全前，请不要关闭支付验证窗口。</p>
+                <p>支付完成后，请根据您的支付情况点击下面按钮。</p>
+            </div>
+        </div>
+        <div class="pay-btn">
+            <a id="pay-error">支付遇到问题</a>
+            <a id="pay-success" class="success">支付成功</a>
+        </div>
+    </div>
+</section>
+{% end %}
+
+{% block footer %}
+<script src="{{ static_url("home/js/sweet-alert.min.js") }}"></script>
+<script>
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+function formDate(time){
+    var d = new Date(parseInt(time) * 1000);
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;
+    var date = d.getDate();
+    var hour = d.getHours();
+    var minute = d.getMinutes();
+    var second = d.getSeconds();
+    var creatime = year + "-" + month + "-" + date + "   " + hour + ":" + minute + ":" + second;
+    return creatime;
+}
+function chagre_list(page) {
+    page = page ? page : 1;
+    var str = '';
+    var spage = '';
+    $.ajax({
+        type: "POST",
+        url: "/user/charge_list",
+        dataType: 'json',
+        data: "page=" + page + '&_xsrf=' + getCookie("_xsrf"),
+        beforeSend:function(){
+            $('#textbox').find('.text').removeClass('done').addClass('move');
+        },
+        success: function(msg) {
+            if (msg == 0) {
+                str = '<div class="list charge"><p>没有您要查找的数据</p></div>';
+            } else {
+                spage = '<div id="charge-page" class="page" data-page="'+page+'" data-maxpage="'+msg.pinfo.all_page+'"><div class="pbtn prev"><i class="fa fa-arrow-left"></i></div><div class="pbtn next"><i class="fa fa-arrow-right"></i></div><div class="pagecount"><span>'+page+'</span>/<span>'+msg.pinfo.all_page+'</span></div></div>';
+                for (var i in msg.clist) {
+                    str += '<div class="list charge" data-oid="'+msg.clist[i]['oid']+'"><div class="thead"><img src="{{ static_url("home/images/c-icon.png") }}"/></div><div class="ttext"><p>' + msg.clist[i]["name"] + '</p><span>' + formDate( msg.clist[i]['creatime']) + '</span></div><div class="tdata"><p style="color:#70CF1C">' + msg.clist[i]['pay'] + 'rmb / ' + msg.clist[i]['electricity'] + 'kWh</p><span>充电桩：' + msg.clist[i]['code'] + '</span></div></div>';
+                }
+                setTimeout(function() {
+                    $('#textbox').find('.title').text('充电记录');
+                    $('#textbox').find('.text').html(str);
+                    $('#textbox').find('.text').append(spage);
+                    if(msg.pinfo.all_page == 1){
+                        $('#charge-page').hide();
+                    }else{
+                        if(page == 1){
+                            $('#charge-page .prev').hide();
+                        }else if(msg.pinfo.all_page == page){
+                            $('#charge-page .next').hide();
+                        }
+                    }
+                    $('#textbox').find('.text').removeClass('move').addClass('done');
+                }, 300);
+            }
+        }
+    });
+}
+function save_list(page) {
+    page = page ? page : 1;
+    var str = '';
+    var spage = '';
+    $.ajax({
+        type: "POST",
+        url: "/user/save_list",
+        dataType: 'json',
+        data: "page=" + page + '&_xsrf=' + getCookie("_xsrf"),
+        beforeSend:function(){
+            $('#textbox').find('.text').removeClass('done').addClass('move');
+        },
+        success: function(msg) {
+            if (msg == 0) {
+                str = '<div class="list charge"><p>没有您要查找的数据</p></div>';
+            } else {
+                spage = '<div id="save-page" class="page" data-page="'+page+'" data-maxpage="'+msg.pinfo.all_page+'"><div class="pbtn prev"><i class="fa fa-arrow-left"></i></div><div class="pbtn next"><i class="fa fa-arrow-right"></i></div><div class="pagecount"><span>'+page+'</span>/<span>'+msg.pinfo.all_page+'</span></div></div>';
+                for (var i in msg.slist) {
+                    if(msg.slist[i].model == 'alipay'){
+                        var model = '支付宝';
+                    }else{
+                        var model = '银联';
+                    }
+                    str += '<div class="list"><div class="thead"><img src="{{ static_url("home/images/m-icon.png") }}"/></div><div class="ttext"><p style="color:#70CF1C">+'+msg.slist[i].increase+'</p><span>'+formDate( msg.slist[i]['acttime'])+'</span></div><div class="tdata"><p>'+model+'</p></div></div>';
+                }
+                $('#textbox').find('.text').removeClass('done').addClass('move');
+                setTimeout(function(){
+                    $('#textbox').find('.title').text('充值记录');
+                    $('#textbox').find('.text').html(str);
+                    $('#textbox').find('.text').append(spage);
+                    if(msg.pinfo.all_page == 1){
+                        $('#save-page').hide();
+                    }else{
+                        if(page == 1){
+                            $('#save-page .prev').hide();
+                        }else if(msg.pinfo.all_page == page){
+                            $('#save-page .next').hide();
+                        }
+                    }
+                    $('#textbox').find('.text').removeClass('move').addClass('done');
+                },300);
+ 
+            }
+        }
+    });
+}
+$(document).ready(function(){
+	//个人信息
+	$('#databox').find('#user-record').click(function(){
+		var name = '{{info["nickname"]}}'; //姓名
+		var sex = '{% if info["sex"] == 1 or info["sex"] == "1" %}男{% elif info["sex"] == 2 or info["sex"] == "2" %}女{% end %}'; //性别
+		var email = '{{info["mail"]}}'; //邮箱
+		var phone = '{{info["phone"]}}'; //电话.
+		var idcard = '{% if info["idcard"] %}{% raw info["idcard"][0:4]+'*******'+info["idcard"][len(info["idcard"])-4:] %}{% end %}';
+		var str = '<div class="list"><div class="thead"><img src="{{ static_url("home/images/name.png") }}"/></div><div class="ttext"><p>'+name+'</p><span>昵称</span></div><div class="tinput"><input type="text" placeholder="'+name+'" id="nickname"/></div><div class="tset"><a></a></div></div><div class="list"><div class="thead"><img src="{{ static_url("home/images/sex.png") }}"/></div><div class="ttext"><p>'+sex+'</p><span>性别</span></div><div class="tinput"><label class="radio-inline"><input type="radio" name="sex" value="男" class="sitesex"> 男</label><label class="radio-inline"><input type="radio" name="sex" value="女" class="sitesex"> 女</label></div><div class="tset"><a></a></div></div><div class="list"><div class="thead"><img src="{{ static_url("home/images/email.png") }}"/></div><div class="ttext"><p>'+email+'</p><span>邮箱</span></div><div class="tinput"><input type="text" placeholder="'+email+'" id="mail"/></div><div class="tset"><a></a></div></div><div class="list"><div class="thead"><img src="{{ static_url("home/images/phone.png") }}"/></div><div class="ttext"><p>'+phone+'</p><span>电话</span></div><div class="tinput"><input type="text" placeholder="'+phone+'" id="phone"/></div><div class="tset"><a></a></div></div><div class="list"><div class="thead"><img src="{{ static_url("home/images/idcard.png") }}"/></div><div class="ttext"><p>'+idcard+'</p><span>身份证</span></div></div>';
+		$('#textbox').find('.text').removeClass('done').addClass('move');
+		setTimeout(function(){
+			$('#textbox').find('.title').text('个人信息');
+			$('#textbox').find('.text').html(str);
+            if(sex == '男'){
+                $('.sitesex[value="男"]').prop('checked',true);
+            }else{
+                $('.sitesex[value="女"]').prop('checked',true);
+            }
+			$('#textbox').find('.text').removeClass('move').addClass('done');
+		},300);
+	});
+	$('#databox').find('#user-record').click();
+
+    //充电列表
+    $('#databox').find('#charge-record').click(function(){
+        chagre_list(1);
+        //充电列表下一页
+        $(document).off('click','#textbox #charge-page .next').on('click','#textbox #charge-page .next',function(event){
+            event.stopPropagation();
+            var thispage = $('#charge-page').attr('data-page');
+            var maxpage = $('#charge-page').attr('data-maxpage');
+            if(thispage == maxpage){
+                return false;
+            }else{
+                chagre_list(parseInt(thispage)+1);
+            }
+        });
+        //充电列表上一页
+        $(document).off('click','#textbox #charge-page .prev').on('click','#textbox #charge-page .prev',function(event){
+            event.stopPropagation();
+            var thispage = $('#charge-page').attr('data-page');
+            var maxpage = $('#charge-page').attr('data-maxpage');
+            if(thispage == 1){
+                return false;
+            }else{
+                chagre_list(parseInt(thispage)-1);
+            }
+        });
+    });
+    //充值列表
+    $('#databox').find('#money-record').click(function(){
+        save_list(1);
+    });
+
+    //修改信息
+    $(document).off('click','#textbox .tset').on('click','#textbox .tset',function(){
+        var data = $(this).siblings('.ttext').children('p').text();
+        $(this).siblings('.ttext').hide().siblings('.tinput').val(data).show();
+        $(this).addClass('active');
+    });
+    
+    //确定修改
+    $(document).off('click','#textbox .tset.active').on('click','#textbox .tset.active',function(){
+        var _this = this;
+        if($(this).siblings('.tinput').find('input').attr('type')=='text'){
+            var akey = $(_this).siblings('.tinput').children('input').attr('id');
+            var aval = $(_this).siblings('.tinput').children('input').val();
+            if(aval){
+                if (akey == '') {
+                    swal({
+                        title: "错误",
+                        text: "参数出错,请刷新后再试",
+                        type: "error"
+                    });
+                    return false;
+                }
+                if (akey == 'phone') {
+                    var reg = /1[3458]{1}\d{9}$/
+                    if (!reg.test(aval)) {
+                        swal({
+                            title: "错误",
+                            text: "手机格式不对",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                } else if (akey == 'mail') {
+                    var reg = /^\+?[a-z0-9](([-+.]|[_]+)?[a-z0-9]+)*@([a-z0-9]+(\.|\-))+[a-z]{2,6}$/
+                    if (!reg.test(aval)) {
+                        swal({
+                            title: "错误",
+                            text: "邮箱格式不对",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                } else if (akey == 'nickname') {
+                    if (aval.indexOf(" ") >= 0) {
+                        swal({
+                            title: "错误",
+                            text: "昵称不能带空格",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                    if (aval.length > 15) {
+                        swal({
+                            title: "错误",
+                            text: "昵称请不要超过15字",
+                            type: "error"
+                        });
+                        return false;
+                    }
+                }
+                $.post('/user/update_info', {
+                    'key': akey,
+                    'val': aval,
+                    '_xsrf': getCookie("_xsrf")
+                }, function(data) {
+                    if (data == 1) {
+                        $(_this).siblings('.ttext').children('p').text(aval);
+                    }
+                });
+                $(this).siblings('.tinput').hide().siblings('.ttext').show();
+                $(this).siblings('.tinput').children('input').val('');
+                $(this).siblings('.tinput').children('input').attr('placeholder',aval);
+                $(this).removeClass('active');
+
+          }else{
+            $(this).siblings('.tinput').hide().siblings('.ttext').show();
+            $(this).siblings('.tinput').children('input').val('');
+            $(this).removeClass('active');
+            return false;
+          }
+                
+        }else{
+            if($(_this).siblings('.tinput').find('input:radio[name="sex"]:checked').val() == '男'){
+                 var aval = 1;
+            }else{
+                 var aval = 2;
+            }
+            var akey = $(_this).siblings('.tinput').find('input').attr('name');
+            $.post('/user/update_info', {
+                'key': akey,
+                'val': aval,
+                '_xsrf': getCookie("_xsrf")
+            }, function(data) {
+                if (data == 1) {
+                    $(_this).siblings('.ttext').children('p').text($(_this).siblings('.tinput').find('input:radio[name="sex"]:checked').val());
+                    var wechat = '{{info["headimgurl"]}}';
+                    if(wechat){
+                        $('#userimg').children('img').attr('src',wechat);
+                    }else if(aval ==1){
+                        $('#userimg').children('img').attr('src','{{ static_url("home/images/male.png") }}');
+                    }else{
+                        $('#userimg').children('img').attr('src','{{ static_url("home/images/women.png") }}');
+                    }
+                }
+            });
+            $(this).siblings('.tinput').hide().siblings('.ttext').show();
+            $(this).siblings('.tinput').children('input').val('');
+            $(this).siblings('.tinput').children('input').attr('placeholder', aval);
+            $(this).removeClass('active');
+        }
+    });
+
+    //充电返回
+    $(document).off('click','#textbox #recharge-back').on('click','#textbox #recharge-back',function(){
+        $('#money-recharge').click();
+    });
+ 
+    //充电详情
+    $(document).off('click','#textbox .charge').on('click','#textbox .charge',function(){
+        var oid=$(this).attr('data-oid');
+        $.ajax({
+            type: "GET",
+            url: "/user/order_info",
+            dataType: 'json',
+            data: 'oid='+oid,
+            beforeSend:function(){
+                $('#textbox').find('.text').removeClass('done').addClass('move');
+            },
+            success: function(msg) {
+                if (msg == 0) {
+                    str = '<div class="list charge"><p>没有您要查找的数据</p></div>';
+                } else {
+                    if(msg['finish']==1){
+                        var finish='已结算';
+                    }else if(msg['finish']==0){
+                        var finish='未完成(充电中)';
+                    }else{
+                        var finish='异常结束';
+                    }
+                    var str = '<div class="data"><div class="at"><span>充电金额</span><p>'+msg['pay']+'</p></div><div class="al"><span>充电度数</span><p>'+msg['electricity']+' kWh</p></div><div class="al"><span>开始时间</span><p>'+formDate( msg['creatime'])+'</p></div><div class="al"><span>结束时间</span><p>'+formDate( msg['endtime'])+'</p></div><div class="al"><span>充电桩号码</span><p>'+msg['code']+'</p></div><div class="al"><span>地址</span><p>'+msg['name']+'</p></div><div class="al"><span>订单状态</span><p>'+finish+'</p></div><div class="back">返回列表</div></div>';
+                    setTimeout(function() {
+                        $('#textbox').find('.title').text('充电记录');
+                        $('#textbox').find('.text').append(str);
+                        $('#textbox').find('.text').removeClass('move').addClass('done');
+                    }, 300);
+                }
+            }
+        });
+    });
+    
+    //返回列表
+    $(document).off('click','#textbox .back').on('click','#textbox .back',function(){
+        var _this = this;
+        $('#textbox').find('.text').removeClass('done').addClass('move');
+        setTimeout(function(){
+            $('#textbox').find('.title').text('充电记录');
+            $(_this).parents('.data').remove();
+            $('#textbox').find('.text').removeClass('move').addClass('done');
+        },300);
+    });
+        
+    //充值页面
+    $('#sitebox').find('#money-recharge').click(function(){
+        var str = '<div class="recharge"><div id="Alipay" class="rlist"><div class="rhead"><img src="{{ static_url("home/images/alipay.png") }}"/></div><div class="rtext">支付宝</div></div><div id="CUP"class="rlist"><div class="rhead"><img src="{{ static_url("home/images/CUP.png") }}"/></div><div class="rtext">银联</div></div></div>';
+         
+        $('#textbox').find('.text').removeClass('done').addClass('move');
+        setTimeout(function(){
+            $('#textbox').find('.title').text('充值');
+            $('#textbox').find('.text').html(str);
+            $('#textbox').find('.text').removeClass('move').addClass('done');
+        },300);
+    });
+    
+    //充值选择
+    $(document).off('click','#textbox .rlist').on('click','#textbox .rlist',function(){
+        if($(this).attr('id')=='Alipay'){
+            var t = '支付宝';
+        }else{
+            var t = '银联';
+        }
+        var str= '<div class="recharge"><div class="rtitle">使用'+t+'充值</div><div class="rselect"><label class="radio-inline"><input type="radio" name="moneyRadio" id="moneyRadio1" value="30"/>30元</label></div><div class="rselect"><label class="radio-inline"><input type="radio" name="moneyRadio" id="moneyRadio2" value="50"/>50元</label></div><div class="rselect"><label class="radio-inline"><input type="radio" name="moneyRadio" id="moneyRadio3" value="100"/>100元</label></div><div class="rselect custom"><label class="radio-inline"><input type="radio" name="moneyRadio" id="moneyRadio4" value="custom"/> 自定义金额 </label><p><input id="freeMoney" type="text"/>元</p></div><div class="rsubmit"><div id="recharge-back" class="rbtn">返回选择</div><div id="recharge-next" class="rbtn">下一步</div></div></div>'  ;
+        
+        $('#textbox').find('.text').removeClass('done').addClass('move');
+        setTimeout(function(){
+            $('#textbox').find('.title').text('充值');
+            $('#textbox').find('.text').html(str);
+            $('#textbox').find('.text').removeClass('move').addClass('done');
+        },300);
+        //下一步
+         $(document).off('click','#textbox #recharge-next').on('click','#textbox #recharge-next',function(){
+            var radios = $('input[name=moneyRadio]')
+            var money = 0;
+            for( var i = 0; i<radios.length; i++ ){
+                if( radios[i].checked == true && radios[i].value == 'custom' ){
+                    var freeMoney = $('#freeMoney').val();
+                    if( isNaN( freeMoney ) ){
+                        swal({
+                            title: "错误提示",
+                            text: "充值金额请输入数字",
+                            type: "error"
+                        });
+                        return;
+                    }else if( parseInt( freeMoney ) <= 0 ){
+                        swal({
+                            title: "错误提示",
+                            text: "充值金额必须大于0",
+                            type: "error"
+                        });
+                        return;
+                    }else if( parseInt( freeMoney ) != freeMoney ){
+                        swal({
+                            title: "错误提示",
+                            text: "充值金额请输入正整数",
+                            type: "error"
+                        });
+                        return;
+                    }else{
+                        money = freeMoney;
+                    }
+                }else if( radios[i].checked == true ){
+                    money = radios[i].value;
+                }
+            }
+            if( money <= 0 ){
+                swal({
+                    title: "错误提示",
+                    text: "请选择充值金额",
+                    type: "error"
+                });
+                return;
+            }
+		 	$('#pay-bg').show();
+			$('#pay-box').show();
+            window.open('/user/use_alipay?money='+money)
+            event.stopPropagation();
+            
+         });
+    });
+	$('#pay-error').click(function(){
+		$('#pay-bg').hide();
+        $('#pay-box').hide();
+	})
+	$('#pay-success').click(function(){
+        $('#pay-bg').hide();
+        $('#pay-box').hide();
+		save_list(1);
+	})
+ 
+    
+    //绑定页面
+    $('#nbinding').click(function(){
+        var str = '<div class="binding"><div class="blist"><div class="bhead"><img src="images/id.png"/></div><div class="btext"><input type="text" class="form-control" placeholder="用户名"/></div></div><div class="blist"><div class="bhead"><img src="images/ps.png"/></div><div class="btext"><input type="text" class="form-control" placeholder="密　码"/></div></div><div class="bsubmit"><div class="bbtn">解除绑定</div></div></div>';
+        $('#textbox').find('.text').removeClass('done').addClass('move');
+        setTimeout(function(){
+            $('#textbox').find('.title').text('充电记录');
+            $('#textbox').find('.text').html(str);
+            $('#textbox').find('.text').removeClass('move').addClass('done');
+        },300);
+    });
+});
+</script>
+{% end %}

@@ -1,0 +1,33 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="content-type" content="text/html" />
+	<meta name="renderer" content="webkit" />
+	<!-- 告诉webkit内核浏览器初始缩放比例为1 -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<!-- 百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符 -->
+	<meta name="description" content="充电 充电桩 汽车 电动车 微信">
+	<!-- 关于文档的关键字标签 -->
+	<meta name="keywords" content="充电 充电桩 汽车 电动车 微信">
+	<title>{% block title %}{% end %}</title>
+	<!-- 更换第三方图标库,Font Awesome <i class="fa fa-medium">-->
+	<link href="{{ static_url("wechat/css/bootstrap.css") }}" rel="stylesheet">
+	<link href="{{ static_url("wechat/css/index.css") }}" rel="stylesheet">
+    {% block javascript %}{% end %}
+</head>
+<body>
+    <header>
+        {% block header %}{% end %}
+    </header>
+    <content>
+        {% block body %}{% end %}
+    </content>
+
+    <script type="text/javascript" src="{{ static_url("wechat/js/bootstrap/jquery-1.11.1.min.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("wechat/js/bootstrap/bootstrap.min.js") }}"></script>
+
+    <footer>
+        {% block footer %}{% end %}
+    </footer>
+</body>
+</html>

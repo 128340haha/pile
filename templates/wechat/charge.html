@@ -1,0 +1,160 @@
+{% extends "main.html" %}
+
+{% block header %}
+	<span class="back"><a href="/wechat"><i class="fa fa-chevron-left"></i>Back</a></span>
+    <span class="title">充电</span>
+{% end %}
+
+{% block javascript %}
+	<link href="{{ static_url("wechat/css/sweet-alert.css") }}" rel="stylesheet">
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script>
+		wx.ready(function(){
+			wx.scanQRCode({
+				needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+				scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+				success: function (res) {
+					var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+					window.location = result;
+				}
+			});
+		})
+		function qrcode(){	
+			wx.config({
+				debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId: "{{ param['appid'] }}", // 必填，公众号的唯一标识
+				timestamp: {{ param['timestamp'] }}, // 必填，生成签名的时间戳
+				nonceStr: "{{ param['noncestr'] }}", // 必填，生成签名的随机串
+				signature: "{{ param['signature'] }}",// 必填，签名，见附录1
+				jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			});
+		}
+	</script>
+{% end %}
+
+{% block body %}
+<form method="get" id="form1" name="form1" action="/act_pile" >
+<section id="charge">
+	<div class="charge-title">输入充电桩号码</div>
+    <div class="charge-input">
+    	<input type="text" name="charge-number" id="charge-number"/>
+        <span><a href="javascript:void(qrcode())"><i class="fa fa-qrcode"></i></a></span>
+    </div>
+    <div class="charge-btn">
+    	<a href="#">下一步</a>
+    </div>
+</section>
+</form>
+{% end %}
+
+{% block footer %} 
+<script src="{{ static_url("wechat/js/sweet-alert.min.js") }}"></script>
+<script>
+$(document).ready(function() {
+ 
+    $('#charge .charge-options .mode').click(function(){
+ 
+		if($(this).hasClass('active')){
+			
+			$(this).removeClass('active');
+			
+			$('.o-box').stop().animate({ opacity:0},200,function(){
+				
+				$('.o-box').stop().css({ display:'none'})
+				
+			});	
+			
+		}else{
+ 
+			$(this).addClass('active');
+			
+			$('.o-box').stop().animate({ opacity:1},200,function(){
+				
+				$('.o-box').stop().css({ display:'block'})
+				
+			});		
+		}
+			
+	});
+	
+	$('#charge .charge-options .o-list .list').click(function(){
+ 
+		var d = $(this).attr('data-l');
+ 		
+		var h = $('#charge .charge-options .o-content').find('div[data-o="'+d+'"]').height();
+		
+			$('#charge .charge-options .o-content').find('div[data-o="'+d+'"]').addClass('active');	
+		
+			$('#charge .charge-options .o-box').stop().animate({height:h},200);
+			
+			$('#charge .charge-options .o-list').addClass('active');
+	 
+			$('#charge .charge-options .o-content').addClass('active');
+ 
+	})
+	
+	$('#charge .charge-options .back').click(function(){
+		
+		$('#charge .charge-options .o-box').stop().animate({height:'150px'},200);
+		
+		$('#charge .charge-options .o-content').find('.content').removeClass('active');
+		
+		$('#charge .charge-options .o-list').removeClass('active');
+	 
+		$('#charge .charge-options .o-content').removeClass('active');
+ 	
+	})
+	
+	function money(v,_this){
+		
+		var o = v;
+ 
+		var h = parseInt(o / 60);
+		
+		var m = o - (h*60);
+		
+		if(h>0){
+			$(_this).parent().siblings('.tips').find('.hour').text(h);
+			$(_this).parent().siblings('.tips').find('.hour').text(m);
+		}else{
+			$(_this).parent().siblings('.tips').find('.hour').text(0);
+			$(_this).parent().siblings('.tips').find('.min').text(m);
+		}
+		
+	}
+	
+	$('#m-input').bind('input propertychange',function(){
+		
+		var _this = this;
+		
+		var v = $(this).val();
+ 
+		money(v,_this);
+ 
+	});
+	
+	$('.charge-btn').click(function(){
+		
+		var v = $('#charge-number').val();
+		
+		if ( v.length != 12 ){
+			swal({ title: "错误",   text: "电桩号码长度为12位",   type: "error" });
+			return
+		}
+
+		if(isNaN(v)){
+ 
+			swal({ title: "错误",   text: "请输入正确的充电桩号码",   type: "error" });
+		}else{
+			
+			$('#form1').submit()	
+		//	swal({ title: "发送成功",   text: "请注意充电桩显示信息",   type: "success",confirmButtonColor: "#DD6B55" });
+			
+		}
+
+	})
+ 	
+ 
+});
+</script>
+{% end %}

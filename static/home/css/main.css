@@ -1,0 +1,190 @@
+﻿/* css  reset */
+html, body, form { font-size: 14px; font-size: 14px\9; height: 100%; margin: 0; }
+body { font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif; overflow-y: scroll; }
+@media (max-width: 991px) {
+html, body, form { font-size: 13px; font-size: 13px\9; }
+}
+@media (max-width: 767px) {
+html, body, form { font-size: 12px; font-size: 12px\9; }
+}
+h1 { font-size: 3em; margin: 0; font-weight: bold; }
+h3 { font-size: 2em; margin: 0; font-weight: bold; }
+h4 { font-size: 1.3em; margin: 0; font-weight: bold; }
+small { margin-left: 5px; }
+a, a:hover, a:focus { text-decoration: none; outline: none; }
+a { color: #34393b; }
+a:hover, a:focus { color: #444; }
+/* WP8 and IE10 hack */
+@-webkit-viewport {
+width: device-width;
+}
+@-moz-viewport {
+width: device-width;
+}
+@-ms-viewport {
+width: device-width;
+}
+@-o-viewport {
+width: device-width;
+}
+@viewport {
+width: device-width;
+}
+.ie { height: 100%; width: 100%; background: url(../images/404.jpg) no-repeat center center #F3F2EE; position: fixed; z-index: 999999; }
+#navbar { width: 100%; height: 50px; background: #00ACEE; position: relative; z-index: 2; }
+#navbar #navbox { width: 100%; height: 50px; position: relative; }
+#navbar #navbox #navlist { width: 200px; height: 50px; position: absolute; left: 0; top: 0; }
+#navbar #navbox #navlist > a { padding: 0 20px; height: 50px; line-height: 50px; display: block; float: left; color: #fff; }
+#navbar #navbox #navlist > a.active { background: #0085B8; }
+#navbar #navbox #navlogo { width: 100px; height: 50px; position: absolute; left: 50%; top: 0; margin-left: -50px; }
+#navbar #navbox #navsite { position: absolute; right: 0; top: 0; padding: 10px 60px 10px 0; height: 50px; line-height: 30px; color: #fff; }
+#navbar #navbox #navsite > a { position: absolute; right: 0; top: 10px; width: 50px; height: 30px; text-align: center; line-height: 30px; display: block; color: #fff; background: #0085B8; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+#navbar #navbox #navsite > a:hover { background: #fff; color: #00ACEE; cursor: pointer; }
+#main { width: 100%; margin-top: -50px; padding: 70px 0 20px 0; }
+@media (min-width: 768px) {
+#main { height: 100%; }
+#main > div, #main > div > div, #main > div > div > div { height: 100%; }
+}
+#main #userbox { width: 100%; height: 270px; background: #F3F3F3; border-radius: 20px; -moz-border-radius: 20px; -webkit-border-radius: 20px; overflow: hidden; }
+#main #userbox #userhead { width: 100%; height: 100px; position: relative; padding: 15px 15px 15px 95px; }
+#main #userbox #userhead #userimg { position: absolute; left: 15px; top: 15px; width: 70px; height: 70px; border-radius: 50%; -moz-border-radius: 50%; -webkit-border-radius: 50%; overflow: hidden; }
+#main #userbox #userhead #userimg > img { width: 100%; max-width: 100%; height: auto; width: auto; display: block; margin: auto; }
+#main #userbox #userhead #username { width: 100%; height: 70px; padding: 15px 0; }
+#main #userbox #userhead #username #uname { width: 100%; height: 20px; line-height: 20px; color: #3A3A3A; font-weight: bolder; margin: 0; }
+#main #userbox #userhead #username #uwechat { width: 100%; height: 20px; line-height: 20px; color: #989898; margin: 0; }
+#main #userbox #userhead #username #uwechat > a { margin-left: 10px; display: inline-block; padding: 0 5px; height: 20px; background: #666; color: #fff; cursor: pointer; }
+#main #userbox #userdata { width: 100%; height: 80px; border-bottom: 1px solid #E7E7E7; border-top: 1px solid #E7E7E7; }
+#main #userbox #userdata .list { float: left; width: 33.3333333333%; height: 80px; padding: 10px; text-align: center; }
+#main #userbox #userdata .list.b { border-left: 1px solid #E7E7E7; border-right: 1px solid #E7E7E7; }
+#main #userbox #userdata .list > p { display: block; margin: 0; height: 35px; line-height: 35px; color: #3A3A3A; font-size: 1.2em; font-weight: bolder; }
+#main #userbox #userdata .list > span { display: block; height: 25px; line-height: 25px; color: #989898; overflow: hidden; }
+#main #userbox #usercard { width: 100%; height: 90px; padding: 15px; text-align: center; }
+#main #userbox #usercard > p { margin: 0; display: block; height: 35px; line-height: 35px; color: #3A3A3A; font-size: 1.2em; font-weight: bolder; }
+#main #userbox #usercard > span { display: block; height: 25px; line-height: 25px; color: #989898; }
+#main #databox { width: 100%; height: 300px; background: #F3F3F3; border-radius: 20px; -moz-border-radius: 20px; -webkit-border-radius: 20px; margin: 20px 0; overflow: hidden; }
+#main #databox .list { width: 100%; height: 100px; position: relative; padding: 15px 15px 15px 100px; }
+#main #databox .list:hover { background: #e3e3e3; cursor: pointer; }
+#main #databox .list .dhead { position: absolute; left: 15px; top: 15px; width: 70px; height: 70px; border-radius: 50%; -moz-border-radius: 50%; -webkit-border-radius: 50%; overflow: hidden; }
+#main #databox .list .dhead > img { width: 100%; max-width: 100%; height: auto; width: auto; display: block; margin: auto; }
+#main #databox .list .dtext { width: 100%; height: 70px; padding: 15px 0; }
+#main #databox .list .dtext > p { width: 100%; height: 40px; line-height: 40px; color: #3A3A3A; font-weight: bolder; margin: 0; display: block; }
+#main #sitebox { width: 100%; height: 100px; background: #F3F3F3; border-radius: 20px; -moz-border-radius: 20px; -webkit-border-radius: 20px; margin: 20px 0; overflow: hidden; }
+#main #sitebox .list { width: 100%; height: 100px; position: relative; padding: 15px 15px 15px 100px; }
+#main #sitebox .list:hover { background: #e3e3e3; cursor: pointer; }
+#main #sitebox .list .dhead { position: absolute; left: 15px; top: 15px; width: 70px; height: 70px; border-radius: 50%; -moz-border-radius: 50%; -webkit-border-radius: 50%; overflow: hidden; }
+#main #sitebox .list .dhead > img { width: 100%; max-width: 100%; height: auto; width: auto; display: block; margin: auto; }
+#main #sitebox .list .dtext { width: 100%; height: 70px; padding: 15px 0; }
+#main #sitebox .list .dtext > p { width: 100%; height: 40px; line-height: 40px; color: #3A3A3A; font-weight: bolder; margin: 0; display: block; }
+#main #textbox { width: 100%; min-height: 100%; background: #F3F3F3; border-radius: 20px; -moz-border-radius: 20px; -webkit-border-radius: 20px; overflow: hidden; }
+#main #textbox .text { width: 100%; position: relative; -webkit-transition: all .3s ease-in-out; -o-transition: all .3s ease-in-out; -moz-transition: all .3s ease-in-out; transition: all .3s ease-in-out; }
+#main #textbox .text.move { -webkit-animation: bounceOutRight .4s ease-out; animation: bounceOutRight .4s ease-out; }
+#main #textbox .text.done { -webkit-animation: bounceFromRight .4s ease-out; animation: bounceFromRight .4s ease-out; }
+@-webkit-keyframes bounceFromRight { 0% {
+-webkit-transform: translate3d(-30px, 0, 0);
+transform: translate3d(-30px, 0, 0);
+opacity:0;
+}
+ 100% {
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+opacity:1;
+}
+}
+@keyframes bounceFromRight { 0% {
+-webkit-transform: translate3d(-30px, 0, 0);
+transform: translate3d(-30px, 0, 0);
+opacity:0;
+}
+100% {
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+opacity:1;
+}
+}
+ @-webkit-keyframes bounceOutRight { 0% {
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+opacity:1;
+}
+ 100% {
+-webkit-transform: translate3d(-30px, 0, 0);
+transform: translate3d(-30px, 0, 0);
+opacity:0;
+}
+}
+@keyframes bounceOutRight { 0% {
+-webkit-transform: translate3d(0, 0, 0);
+transform: translate3d(0, 0, 0);
+opacity:1;
+}
+ 100% {
+-webkit-transform: translate3d(-30px, 0, 0);
+transform: translate3d(-30px, 0, 0);
+opacity:0;
+}
+}
+#main #textbox .title { width: 100%; height: 40px; line-height: 40px; padding: 0 15px; background: #00ACEE; color: #fff; font-weight: bolder; }
+#main #textbox .list { width: 100%; height: 70px; position: relative; padding: 10px 100px 10px 100px; border-bottom: 1px solid #E7E7E7; }
+#main #textbox .list:hover { background: #e3e3e3; cursor: pointer; }
+#main #textbox .list .thead { position: absolute; left: 30px; top: 10px; width: 50px; height: 50px; overflow: hidden; }
+#main #textbox .list .thead > img { width: 100%; max-width: 100%; height: auto; width: auto; display: block; margin: auto; }
+#main #textbox .list .tinput { width: 100%; height: 50px; padding: 10px 0; display: none; }
+#main #textbox .list .tinput > input { width: 100%; height: 30px; line-height: 30px; padding: 0 10px; }
+#main #textbox .list .tset { position: absolute; right: 30px; top: 10px; width: 50px; height: 50px; padding: 10px; text-align: center; font-size: 1.2em; overflow: hidden; }
+#main #textbox .list .tset > a { width: 30px; height: 30px; line-height: 30px; background: #989898; color: #F3F3F3; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; display: block; position: relative; font-family: 'FontAwesome'; }
+#main #textbox .list .tset > a:after { content: "\f040"; }
+#main #textbox .list .tset.active > a { background: #00ACEE; }
+#main #textbox .list .tset.active > a:after { content: "\f00c"; }
+#main #textbox .list .ttext { width: 100%; height: 50px; }
+#main #textbox .list .ttext > p { width: 100%; height: 30px; line-height: 30px; color: #3A3A3A; font-weight: bolder; margin: 0; display: block; }
+#main #textbox .list .ttext > span { width: 100%; height: 20px; line-height: 20px; color: #989898; display: block; }
+#main #textbox .list .tdata { height: 50px; position: absolute; right: 30px; top: 10px; }
+#main #textbox .list .tdata > p { width: 100%; height: 30px; line-height: 30px; color: #3A3A3A; font-weight: bolder; margin: 0; display: block; }
+#main #textbox .list .tdata > span { width: 100%; height: 20px; line-height: 20px; color: #989898; display: block; }
+#main #textbox .page { width: 100%; height: 70px; position: relative; line-height: 30px; text-align: center; padding: 20px 30px; text-align: right; }
+#main #textbox .page .pbtn { width: 50px; height: 30px; background: #333; color: #F3F3F3; display: inline-block; text-align: center; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; cursor: pointer; }
+#main #textbox .page .pbtn:hover { background: #666; }
+#main #textbox .page .pbtn.next { margin-left: 5px; }
+#main #textbox .page .pagecount { position: absolute; left: 30px; top: 20px; color: #989898; font-weight: bolder; font-size: 1.3em; font-family: Arial, Helvetica, sans-serif; }
+#main #textbox .page .pagecount> span { color: #3A3A3A; margin: 0 3px; font-size: 0.8em; }
+#main #textbox .data { width: 100%; height: 100%; background: #F3F3F3; padding: 0 30px; position: absolute; top: 0; left: 0; }
+#main #textbox .data .at { width: 100%; height: 60px; line-height: 60px; border-bottom: 1px solid #E7E7E7; position: relative; margin-bottom: 20px; }
+#main #textbox .data .at > span { position: absolute; left: 0; top: 0; height: 50px; display: block; color: #aaa; }
+#main #textbox .data .at > p { position: absolute; right: 0; top: 0; height: 50px; display: block; margin: auto; color: #70CF1C; font-size: 1.6em; }
+#main #textbox .data .al { width: 100%; height: 30px; line-height: 30px; position: relative; }
+#main #textbox .data .al > span { position: absolute; left: 0; top: 0; height: 30px; display: block; color: #aaa; }
+#main #textbox .data .al > p { position: absolute; right: 0; top: 0; height: 30px; display: block; margin: auto; }
+#main #textbox .data .back { width: 80px; height: 30px; display: block; text-align: center; line-height: 30px; background: #666; color: #fff; margin-top: 20px; cursor: pointer; }
+#main #textbox .binding { width: 100%; }
+#main #textbox .binding .blist { width: 100%; height: 70px; padding: 10px 30px 10px 100px; position: relative; }
+#main #textbox .binding .blist .bhead { position: absolute; left: 30px; top: 10px; width: 50px; height: 50px; overflow: hidden; }
+#main #textbox .binding .blist .bhead > img { width: 100%; max-width: 100%; height: auto; width: auto; display: block; margin: auto; }
+#main #textbox .binding .blist .btext { width: 100%; height: 50px; padding: 8px 0; }
+#main #textbox .binding .bsubmit { width: 100%; height: 40px; padding: 0 30px; margin: 20px 0; }
+#main #textbox .binding .bbtn { width: 100%; height: 40px; text-align: center; line-height: 40px; background: #666; color: #fff; font-size: 1.2em; cursor: pointer; }
+#main #textbox .recharge { width: 100%; }
+#main #textbox .recharge .rlist { width: 100%; height: 83px; position: relative; padding: 10px 0 10px 152px; border-bottom: 1px solid #E7E7E7; }
+#main #textbox .recharge .rlist .rhead { position: absolute; left: 30px; top: 10px; width: 102px; height: 63px; overflow: hidden; }
+#main #textbox .recharge .rlist .rhead > img { width: 100%; max-width: 100%; height: auto; width: auto; display: block; margin: auto; }
+#main #textbox .recharge .rlist .rtext { width: 100%; height: 63px; line-height: 63px; color: #3A3A3A; font-weight: bolder; }
+#main #textbox .recharge .rtitle { width: 100%; height: 70px; line-height: 70px; padding: 0 30px; border-bottom: 1px solid #E7E7E7; }
+#main #textbox .recharge .rselect { width: 100%; height: 40px; padding: 7px 60px; position: relative; line-height: 26px; }
+#main #textbox .recharge .rselect input { width: 20px; height: 20px; position: absolute; margin: 0; left: 30px; top: 10px; }
+#main #textbox .recharge .rselect.custom p { margin: 0; display: inline-block; height: 26px; }
+#main #textbox .recharge .rselect.custom p > input { width: 70px; height: 26px; line-height: 25px; padding: 0 10px; margin: 0 10px; position: relative; left: auto; top: auto; }
+#main #textbox .recharge .rsubmit { width: 100%; height: 40px; padding: 5px 30px; margin: 20px 0; text-align: left; }
+#main #textbox .recharge .rbtn { width: 80px; height: 30px; text-align: center; line-height: 30px; background: #666; color: #fff; cursor: pointer; display: inline-block; margin-right: 5px; }
+#main #pay-bg { width: 100%; height: 100%; background: #000; filter: alpha(opacity=50); opacity: 0.5; position: fixed; top: 0; left: 0; z-index: 99; display: none; }
+#main #pay-box { width: 100%; max-width: 500px; height: 300px; background: #fff; position: fixed; top: 0; left: 0; bottom: 0; right: 0; margin: auto; z-index: 100; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; overflow: hidden; display: none; }
+#main #pay-box .pay-title { width: 100%; height: 40px; line-height: 40px; padding: 0 15px; background: #00ACEE; color: #fff; font-weight: bolder; }
+#main #pay-box .pay-content { width: 100%; height: 200px; position: relative; }
+#main #pay-box .pay-content .pay-loading { width: 150px; height: 200px; line-height: 200px; text-align: center; font-size: 60px; position: absolute; left: 0; top: 0; color: #00ACEE; }
+#main #pay-box .pay-content .pay-tips { width: 100%; height: 60px; padding: 0 20px 0 150px; position: absolute; left: 0; top: 50%; margin-top: -30px; }
+#main #pay-box .pay-content .pay-tips > p { margin: 0; line-height: 30px; }
+#main #pay-box .pay-btn { width: 100%; height: 60px; padding-bottom: 30px; text-align: center; }
+#main #pay-box .pay-btn > a { padding: 0 15px; height: 30px; line-height: 30px; background: #989898; color: #F3F3F3; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; display: inline-block; margin: 0 10px; cursor:pointer;}
+#main #pay-box .pay-btn > a.success { background: #FF8100; }
+@media (max-width: 767px) {
+#main #pay-box .pay-content .pay-loading { width: 100px; }
+#main #pay-box .pay-content .pay-tips { padding: 0 20px 0 100px; }
+}

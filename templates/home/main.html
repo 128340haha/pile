@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html" />
+<!-- 指定以最新的IE版本模式来显示网页 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- 针对360浏览器的内核调用,强制调用极速模式 -->
+<meta name="renderer" content="webkit" />
+<!--[if lt IE 10]>
+<meta name="renderer" content="ie-stand" />
+<![endif]-->
+<!--[if !IE]>
+<meta name="renderer" content="ie-stand" />
+<!<![endif]-->
+<!--[if lt IE 9]>
+      <script language="javascript" type="text/javascript" src="{{ static_url("home/js/bootstrap/html5shiv.js") }}"></script>
+<![endif]-->
+<!-- 确保设备能正常显示响应式页面 -->
+<!-- 告诉webkit内核浏览器初始缩放比例为1 -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- 判断浏览器版本.IE8以下版本,bootstrap支持不了.加个提示 -->
+<!--[if IE]>      
+      <!--[if IE 6]>
+          <div class="ie"></div>
+      <![endif]-->
+<!-- 判断浏览器版本IE6以下版本 -->
+<!--[if lt IE 6]> 
+           <div class="ie"></div>
+      <![endif]-->
+<!--[if IE 7]>
+           <div class="ie"></div>
+      <![endif]-->
+<![endif]-->
+<!-- 百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符 -->
+<meta name="description" content="百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符">
+<!-- 关于文档的关键字标签 -->
+<meta name="keywords" content="关于文档的关键字标">
+<title>{% block title %}{% end %}</title>
+<!-- 更换第三方图标库,Font Awesome <i class="fa fa-medium">-->
+<link href="{{ static_url("home/css/bootstrap.css") }}" rel="stylesheet">
+<link href="{{ static_url("home/css/index.css") }}" rel="stylesheet">
+{% block javascript %}{% end %}
+</head>
+
+<body>
+<nav id="navbar">
+    <div class="content clearfix">
+    	<a id="logo">
+            <img src="{{ static_url("home/images/logo.png") }}" class="img-responsive"/>
+        </a>
+        <span id="navbtn"><i class="nbtn"></i></span></span>
+        <div id="navlist" class="clearfix">
+            <ul>
+                <li>
+                    <a href="/user/index">
+                        首页
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/partner">
+                        合作商
+                    </a>
+                </li>
+                <li>
+                    <a href="/user/about">
+                        关于我们
+                    </a>
+                </li>
+                <li>
+                    <a id="loginBtn">
+                        用户登录
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% block body %}{% end %}
+
+<footer id="footer">
+    <div class="content">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="logo"><img src="{{ static_url("home/images/footer.png") }}" class="img-responsive"></div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <ul class="icons">
+                    <li><i class="fa fa-weixin" id="weixin"></i></li>
+                    <li><i class="fa fa-weibo"></i></li>
+                    <li><i class="fa fa-qq"></i></li>
+                </ul>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <p>Copyright © 2014.Company name</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div id="loginBox">
+    <div class="login">
+        <div class="title">实卡用户 / 微信用户<span id="login-close"><i class="fa fa-times"></i></span></div>
+        <div class="text">
+            <div class="list">
+            	<div class="lbox">
+                    <div class="tit">
+                        <p class="l"><span></span></p>
+                        <span>实卡用户</span>
+                        <p class="r"><span></span></p>
+                    </div>
+                    <div class="txt">
+                        <input type="text" name="essecard" id="regusername" class="input form-control" placeholder="卡号"/>
+                        
+                    </div>
+                    <div class="txt">
+                        <input type="password" name="essepwd" id="regpassword" class="input form-control" placeholder="密　码"/>
+                    </div>
+                </div>
+                <div id="reg" class="bton">登录</div>
+            </div>
+            {% raw xsrf_form_html() %}
+            <div class="list active">
+            	<div class="lbox">
+                    <div class="tit">
+                        <p class="l"><span></span></p>
+                        <span>微信用户</span>
+                        <p class="r"><span></span></p>
+                    </div>
+                    <div class="txt">
+                        <input type="text" name="wechatcard" id="logusername" class="input form-control" placeholder="卡号"/>
+                    </div>
+                    <div class="txt">
+                        <input type="password" name="wechatpwd" id="logpassword" class="input form-control" placeholder="密　码"/>
+                    </div>
+                </div>
+                <div id="log" class="bton">登录</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ static_url("home/js/bootstrap/jquery-1.11.1.min.js") }}"></script>
+<script src="{{ static_url("home/js/bootstrap/bootstrap.min.js") }}"></script>
+<!--[if lt IE 9]>
+      <script src="{{ static_url("home/js/bootstrap/respond.min.js") }}"></script>
+    <![endif]-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{{ static_url("home/js/bootstrap/ie10-viewport-bug-workaround.js") }}"></script>
+<script src="{{ static_url("home/js/bootstrap/ie-emulation-modes-warning.js") }}"></script>
+<!-- 对IE低版本的一个小技巧.禁止在IE模式下,直接本地文件浏览 -->
+<!--[if lt IE 9]><script src="{{ static_url("home/js/bootstrap/ie8-responsive-file-warning.js") }}"></script><![endif]-->
+<script src="{{ static_url("home/js/index.js") }}"></script>
+<script type="text/javascript">
+function data_submit( mode ){
+    if( mode == 1 ){
+        var card = $('#regusername');
+        var password = $('#regpassword');
+    }else if( mode == 2 ){
+        var card = $('#logusername');
+        var password = $('#logpassword');
+    }
+    $.ajax({
+        type: "POST",
+        url: "/user/cardlogin",
+        data: "card="+card.val()+'&pwd='+password.val()+'&_xsrf='+getCookie("_xsrf"),
+        success: function(msg){
+            if( msg == 1 ){
+                //通过
+                window.location = '/user/ucenter'   
+            }else{
+                card.after('<div class="tips"><div class="arrow"></div><div class="inner">卡号或密码错误</div></div>'); 
+                password.after('<div class="tips"><div class="arrow"></div><div class="inner">卡号或密码错误</div></div>'); 
+                return false;
+            }
+        }
+    });
+}
+
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
+$(document).off('click','#loginBtn').on('click','#loginBtn',function(){
+    $('#loginBox').addClass('active');  
+});
+$('#login-close').click(function(){
+    $('#loginBox').removeClass('active');   
+    $('#loginBox').find('.input').val('');
+});
+$('#loginBox').find('.bton').click(function(){
+    if($(this).parents('.list').hasClass('active')){
+        $(this).parents('.list').find('.tips').remove();
+        if($(this).attr('id')== 'reg'){
+            var username = $('#regusername').val();
+            var password = $('#regpassword').val();
+            if(username.length!=12){
+                $('#regusername').focus();
+                $('#regusername').after('<div class="tips"><div class="arrow"></div><div class="inner">卡号格式不对</div></div>') 
+                return false;
+            }else if( isNaN( username ) ){
+                $('#regusername').focus();
+                $('#regusername').after('<div class="tips"><div class="arrow"></div><div class="inner">卡号是数字</div></div>') 
+                return false;
+            }else if(password.length<=0){
+                $('#regpassword').focus();
+                $('#regpassword').after('<div class="tips"><div class="arrow"></div><div class="inner">密码不能为空</div></div>') 
+                return false;
+            }else{
+                data_submit(1)
+            }
+            //注册按钮  
+        }else{
+            var username = $('#logusername').val();
+            var password = $('#logpassword').val();
+            if(username.length!=12){
+                $('#logusername').focus();
+                $('#logusername').after('<div class="tips"><div class="arrow"></div><div class="inner">卡号格式不对</div></div>');
+                return false;
+            }else if( isNaN( username ) ){
+                $('#logusername').focus();
+                $('#logusername').after('<div class="tips"><div class="arrow"></div><div class="inner">卡号是数字</div></div>') 
+                return false;
+            }else if(password.length<=0){
+                $('#logpassword').focus();
+                $('#logpassword').after('<div class="tips"><div class="arrow"></div><div class="inner">密码不能为空</div></div>');
+                return false;
+            }else{
+                data_submit(2)
+            }
+            //登录按钮      
+        }
+    }else{
+        $('#loginBox').find('.list').removeClass('active');
+        $(this).parents('.list').addClass('active');    
+    }
+});
+$('.input').bind('input propertychange',function(){
+    if($(this).siblings('.tips')){
+        $(this).siblings('.tips').addClass('out');
+    }       
+});
+</script>
+{% block footer %}{% end %}
+</body>
+</html>

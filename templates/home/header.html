@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="content-type" content="text/html" />
+<!-- 指定以最新的IE版本模式来显示网页 -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- 针对360浏览器的内核调用,强制调用极速模式 -->
+<meta name="renderer" content="webkit" />
+<!--[if lt IE 10]>
+<meta name="renderer" content="ie-stand" />
+<![endif]-->
+<!--[if !IE]>
+<meta name="renderer" content="ie-stand" />
+<!<![endif]-->
+<!--[if lt IE 9]>
+      <script language="javascript" type="text/javascript" src="{{ static_url("home/js/bootstrap/html5shiv.js") }}"></script>
+<![endif]-->
+<!-- 确保设备能正常显示响应式页面 -->
+<!-- 告诉webkit内核浏览器初始缩放比例为1 -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- 判断浏览器版本.IE8以下版本,bootstrap支持不了.加个提示 -->
+<!--[if IE]>      
+      <!--[if IE 6]>
+          <div class="ie"></div>
+      <![endif]-->
+<!-- 判断浏览器版本IE6以下版本 -->
+<!--[if lt IE 6]> 
+           <div class="ie"></div>
+      <![endif]-->
+<!--[if IE 7]>
+           <div class="ie"></div>
+      <![endif]-->
+<![endif]-->
+<!-- 百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符 -->
+<meta name="description" content="百度等搜索,会把description显示在搜索结果里面.这个地方非常总要.但要注意不要超过150字符">
+<!-- 关于文档的关键字标签 -->
+<meta name="keywords" content="关于文档的关键字标">
+<title>{% block title %}{% end %}</title>
+<!-- 更换第三方图标库,Font Awesome <i class="fa fa-medium">-->
+<link href="{{ static_url("home/css/bootstrap.css") }}" rel="stylesheet">
+<link href="{{ static_url("home/css/main.css") }}" rel="stylesheet">
+<link href="{{ static_url("home/css/sweet-alert.css") }}" rel="stylesheet">
+{% block javascript %}{% end %}
+</head>
+
+<body>
+<nav id="navbar">
+    <div class="container">
+        <div id="navbox">
+            <div id="navlogo"><img src="{{ static_url("home/images/main-logo.png") }}"/></div>
+            <div id="navlist" class="clearfix">
+                <a class="active" href="index.html">
+                    用户中心
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% block body %}{% end %}
+
+<script src="{{ static_url("home/js/bootstrap/jquery-1.11.1.min.js") }}"></script>
+<script src="{{ static_url("home/js/bootstrap/bootstrap.min.js") }}"></script>
+<!--[if lt IE 9]>
+      <script src="{{ static_url("home/js/bootstrap/respond.min.js") }}"></script>
+    <![endif]-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="{{ static_url("home/js/bootstrap/ie10-viewport-bug-workaround.js") }}"></script>
+<script src="{{ static_url("home/js/bootstrap/ie-emulation-modes-warning.js") }}"></script>
+<!-- 对IE低版本的一个小技巧.禁止在IE模式下,直接本地文件浏览 -->
+<!--[if lt IE 9]><script src="{{ static_url("home/js/bootstrap/ie8-responsive-file-warning.js") }}"></script><![endif]-->
+
+{% block footer %}{% end %}
+
+</body>
+</html>

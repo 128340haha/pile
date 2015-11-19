@@ -1,0 +1,80 @@
+{% extends "frame.html" %}
+
+{% block title %}未结算列表{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">充值记录<input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">   
+                <div class="dataTables_filter">
+                    <form name="form1" id="form1" method="get" action="#" >
+                        <label>开始时间: <input name="start" class="mws-textinput mws-datepicker-btn-limit" id="start" type="text" value="{{ search['start'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <label>结束时间: <input name="end" class="mws-textinput mws-datepicker-btn-limit" id="end" type="text" value="{{ search['end'] }}" ></label>
+                         &nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name='id' value="{{ search['id'] }}">
+                        <input type="submit" class="mws-button black small" value="搜索" >
+                    </form>
+                </div> 
+                <table class="mws-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>金额</th>
+                            <th>描述</th>
+                            <th>时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if rlist %}
+                        {% raw xsrf_form_html() %}
+                        {% import time %}
+                        {% for lt in rlist %}
+                        <tr class="gradeA">
+                            <td>{{ lt['oid'] }}</td> 
+                            <td>{{ lt['amount'] }}</td>
+                            <td>{{ lt['descript'] }}</td>
+                            <td>{{ time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(lt['acttime'])) }}</td>
+                        </tr>
+                        {% end %}
+                        {% else %}
+                        <tr class="gradeX">
+                            <td colspan="8">没有找到您要查找的记录</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+                {% if page_bar %}
+                    <div class="dataTables_info">{{ pinfo['this_page'] }}/{{ pinfo['all_page'] }}&nbsp;&nbsp;共{{ pinfo['all_num'] }}条</div>
+                    <div class="dataTables_paginate paging_full_numbers">
+                        {% if page_bar['left_bar'] %}
+                        <span class="first paginate_button">首页</span>
+                        <span class="previous paginate_button">上一页</span>
+                        {% end %}
+                        <span>
+                            {% for l in page_bar['left_bar'] %}
+                            <a href="{{ l['url'] }}"><span class="paginate_button" href="{{ l['url'] }}">{{ l['page'] }}</span></a>
+                            {% end %}
+                            <span class="paginate_active">{{ page_bar['this_page']['page'] }}</span>
+                            {% for r in page_bar['right_bar'] %}
+                            <a href="{{ r['url'] }}"><span class="paginate_button" href="{{ r['url'] }}">{{ r['page'] }}</span></a>
+                            {% end %}     
+                        </span>
+                        {% if page_bar['right_bar'] %}
+                        <span class="next paginate_button">下一页</span>
+                        <span class="last paginate_button">末页</span>
+                        {% end %}
+                    </div>
+                {% end %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

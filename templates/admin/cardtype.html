@@ -1,0 +1,101 @@
+{% extends "frame.html" %}
+
+{% block title %}分类列表{% end %}
+
+{% block javascript %}
+<script>
+
+//删除记录
+function del(id){
+    if( confirm('您确定要删除当前分类？') ){
+        window.location = '/admin/delete_type?id='+id
+    }
+}
+
+function edit(id){
+    window.location = '/admin/edit_type?id='+id
+}
+
+
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
+function change_asc(obj){
+    if( isNaN( obj.value ) ){
+        alert('请输入数字!');
+        obj.value = 5;
+        return false
+    }
+    if( obj.value > 0 && obj.value < 100 ){
+        $.ajax({
+            type: "POST",
+            url: "/admin/change_asc",
+            data: "no="+obj.value+'&id='+obj.id+'&_xsrf='+getCookie("_xsrf"),
+            success: function(msg){
+                if( msg == '1' ){
+                    //通过
+                }else{
+                    alert( '更改失败' );
+                }
+            }
+        });
+    }else{
+        alert('排序1-99之间!');
+        obj.value = 5;
+        return false
+    }
+}
+</script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-table-1">分类列表<input style="float:right; margin-right:20px;" type="button" onclick="javascript:window.location='/admin/new_type';" value="添加新分类" class="mws-button grey small"></span>
+        </div>
+        <div class="mws-panel-body">
+            <div class="dataTables_wrapper">
+                <table class="mws-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>分类识别码</th>
+                            <th>分类名称</th>
+                            <th>排序</th>
+                            <th>相关操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if type_list %}
+                        {% raw xsrf_form_html() %}
+                        {% import time %}
+                        {% for lt in type_list %}
+                        <tr class="gradeA">
+                            <td>{{ lt['id'] }}</td> 
+                            <td>{{ lt['cardtype'] }}</td>
+                            <td>{{ lt['typename'] }}</td>
+                            <td><input type="input" id="{{ lt['id'] }}" style="text-align:center;" size="2" onchange="change_asc(this)" value="{{ lt['ascno'] }}"></td>
+                            <td>
+                                <a href="javascript:void(edit('{{ lt['id'] }}'))"><img title="编辑" alt="编辑" src="{{ static_url("admin/css/icons/16/edit.png") }}"></a>&nbsp;&nbsp;&nbsp;
+                                <a href="javascript:void(del('{{ lt['id'] }}'))"><img title="删除分类" alt="删除分类" src="{{ static_url("admin/css/icons/16/cross.png") }}"></a>
+                            </td>
+                        </tr>
+                        {% end %}
+                        {% else %}
+                        <tr class="gradeX">
+                            <td colspan="8">没有找到您要查找的分类</td>
+                        </tr>
+                        {% end %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

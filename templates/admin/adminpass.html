@@ -1,0 +1,84 @@
+{% extends "frame.html" %}
+
+{% block title %}添加管理员{% end %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        function check_param(){
+            var admin = $('input[name=admin]').val()
+            var pass = $('input[name=password]').val()
+            var ckpass = $('input[name=ckpass]').val()
+            if( admin.indexOf(" ") >=0 ){
+                alert("管理员ID不能带空格");
+                return false;
+            }
+            if( admin.length < 6 || admin.length > 30 ){
+                alert("管理员ID长度在6-30位之间");
+                return false;
+            }
+            if (escape(admin).indexOf("%u") >= 0) { 
+                alert('管理员ID不能出现中文');
+                return false;
+            } 
+            if( pass.length < 6 || pass.length > 30 ){
+                alert('密码长度在6-30位之间');
+                return false;
+            }
+            if( pass != ckpass ){
+                alert('两次密码不一致');
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% end %}
+
+{% block body %}
+<div class="container">
+    <div class="mws-panel grid_8">
+        <div class="mws-panel-header">
+            <span class="mws-i-24 i-list">{% if info['admin'] %}重置密码{% else %}添加管理员{% end %}
+            <input style="float:right; margin-right:20px;" type="button" onclick="javascript:history.go(-1);" value="返回上一页" class="mws-button grey small">
+            </span>
+        </div>
+        <div class="mws-panel-body">
+            <form class="mws-form" method="post" onsubmit="return check_param()" action="/admin/act_admin">
+                {% raw xsrf_form_html() %}
+                <div class="mws-form-inline">
+                    <div class="mws-form-row">
+                        <label>管理员ID</label>
+                        <div class="mws-form-item small">
+                            <input type="text" name="admin" {% if info['admin'] %}readonly{% end %} value="{{ info['admin'] }}" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>新密码</label>
+                        <div class="mws-form-item small">
+                            <input type="password" name="password" value="" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label>密码确认</label>
+                        <div class="mws-form-item small">
+                            <input type="password" name="ckpass" value="" class="mws-textinput" />
+                        </div>
+                    </div>
+                    <div class="mws-form-row">
+                        <label></label>
+                        <div class="mws-form-item">
+                            <input type="submit" value="提交" class="mws-button green" />&nbsp;&nbsp;&nbsp;
+                            <input type="reset" value="重置" class="mws-button black" />
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="id" value="{{ info['id'] }}">
+                <input type="hidden" name="act" value="{{ act }}">
+            </form>
+        </div>      
+    </div>
+</div>
+
+<!-- Footer -->
+{% module admin_foot() %}
+<!-- End Footer -->
+{% end %}

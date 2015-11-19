@@ -1,0 +1,34 @@
+{% extends "main.html" %}
+
+{% block title %}提示{% end %}
+
+{% block header %}
+	<span class="back"><a href="{% raw reback %}"><i class="fa fa-chevron-left"></i>{% if sign == '1' %}Go{% else %}Back{% end %}</a></span>
+{% end %}
+ 
+{% block body %}
+	
+	<section id="status">
+		 <div class="title">
+	     	  <span><i class="fa"></i><span>{{notice}}</span></span>
+	     </div>
+	     <div class="content">
+	      	提示：<span>{% if mess %}{{mess}}{% else %}点击back返回,go跳转{% end %}</span>
+	     </div>
+	</section>
+{% end %}
+ 
+{% block footer %} 
+<script>
+$(document).ready(function() {
+	var status = "{{sign}}";
+	
+	if(status=='1'){
+		$('#status').removeClass().addClass('success')	
+	}else{	
+		$('#status').removeClass().addClass('error')	
+	}
+	 
+});
+</script>
+{% end %}

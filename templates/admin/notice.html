@@ -1,0 +1,36 @@
+{% extends "frame.html" %}
+
+{% block title %}系统提示{% end %}
+
+{% block body %}
+<div id="mws-container" class="clearfix">
+    <div class="container">
+    	<div id="mws-error-container">
+        	<h1 id="mws-error-code">{% if sign == '1' %}Success{% else %}Error{% end %} <span>{{ notice }}</span></h1>
+            <p id="mws-error-message"><span style="color:red;">{{ mess }}</span><br><span id="number">4</span>秒后自动跳转,如果没有跳转<a href='{{ reback }}' >请点我</a></p>
+        </div>
+    </div>            
+</div>
+
+<script>
+	var secs=jQuery('#number').html();//5秒
+	var roll = '';
+	for(i=1;i<=secs;i++) { 
+		window.setTimeout("update(" + i + ")", i * 1000);
+	} 
+	function update(num) { 
+		roll = secs - num;
+		jQuery('#number').html( roll )
+		if(num == secs){ 
+			reback( "{{ reback }}" )
+		}
+	}
+	function reback( url ){
+		if( url == 'javascript:history.go(-1)' ){
+			window.history.back();
+		}else{
+			window.location = url;
+		}
+	}
+</script>
+{% end %}
